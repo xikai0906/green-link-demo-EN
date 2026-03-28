@@ -1,4 +1,3 @@
-<DOCUMENT filename="app.py">
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -900,4 +899,3 @@ Weekly automatic update
 
 st.sidebar.markdown("---")
 st.sidebar.caption("© 2024 GreenLink | Innovation and Entrepreneurship Competition DEMO")
-</DOCUMENT>
