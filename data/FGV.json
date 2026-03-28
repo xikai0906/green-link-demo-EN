@@ -1,0 +1,197 @@
+<DOCUMENT filename="FGV.json">
+{
+  "company": "FGV Holdings Berhad",
+  "company_info": {
+    "full_name": "FGV Holdings Berhad",
+    "country": "Malaysia",
+    "industry": "Palm Oil Production",
+    "founded": "2007",
+    "employees": "~18,000",
+    "description": "One of Malaysia's largest palm oil producers"
+  },
+  "environment": {
+    "risk_level": "Low Risk",
+    "risk_score": 25,
+    "status": "✅",
+    "analysis": {
+      "method": "Sentinel-2 Satellite Image Analysis",
+      "period": "2018-2023",
+      "indicator": "Forest Cover Change Rate",
+      "result": "No large-scale deforestation activities detected",
+      "evidence": {
+        "satellite_image_before": "assets/satellite_images/FGV_2014.png",
+        "satellite_image_after": "assets/satellite_images/FGV_2022.png",
+        "ndvi_change": -2.3,
+        "conclusion": "Plantation boundaries are stable with no evidence of new deforestation. Based on Sentinel-2 multispectral satellite data analysis, vegetation index changes over the 5 years are within normal range."
+      },
+      "data_source": {
+        "primary": "EU Sentinel-2 satellite data",
+        "frequency": "Updated every 5 days",
+        "resolution": "10-meter spatial resolution",
+        "coverage": "Global coverage"
+      }
+    },
+    "compliance": {
+      "eudr": "✅ Compliant with EU EUDR Regulations (no deforestation evidence)",
+      "rspo": "⚠️ RSPO certification partially suspended (due to social issues)",
+      "iscc": "✅ ISCC EU certification valid"
+    },
+    "metrics": {
+      "deforestation_rate": "0.1%",
+      "protected_area": "15%",
+      "reforestation": "200 hectares/year"
+    }
+  },
+  "social": {
+    "risk_level": "High Risk",
+    "risk_score": 75,
+    "status": "⚠️",
+    "key_events": [
+      {
+        "date": "2020-09-30",
+        "event": "U.S. Customs and Border Protection (CBP) issued Withhold Release Order (WRO) against FGV based on forced labor allegations",
+        "source": "U.S. Customs and Border Protection (CBP)",
+        "impact": "FGV's palm oil and derived products detained at all U.S. ports of entry and prohibited from entering the U.S. market. This resulted in annual export losses of approximately USD 200 million for FGV, causing significant financial and reputational damage.",
+        "url": "https://www.cbp.gov/newsroom/national-media-release/cbp-issues-detention-order-palm-oil-produced-forced-labor-malaysia",
+        "severity": "Severe"
+      },
+      {
+        "date": "2024-02-22",
+        "event": "FGV sets target to lift U.S. import ban by end of 2024 and has invested over MYR 100 million to compensate workers' recruitment fees",
+        "source": "The Edge Malaysia",
+        "impact": "Demonstrates company's proactive remediation; petition planned for submission in June 2024. However, the ban has not been lifted and export restrictions continue to affect company performance and supply chain partner risk assessment.",
+        "url": "https://theedgemalaysia.com/node/700737",
+        "severity": "Medium (positive progress but issue not resolved)"
+      },
+      {
+        "date": "2024-07-05",
+        "event": "FGV officially submitted petition to U.S. CBP to modify WRO (Withhold Release Order)",
+        "source": "FGV Holdings Berhad (official)",
+        "impact": "FGV submitted the petition on June 30, 2024, demonstrating remediation commitment. However, CBP review cycle typically takes 6-12 months; short-term risk remains and downstream companies need to continue monitoring progress.",
+        "url": "https://www.fgvholdings.com/press_release/fgv-submits-petition-to-us-cbp-to-modify-wro/",
+        "severity": "Low (positive progress)"
+      }
+    ],
+    "traditional_rating": {
+      "msci": "BB",
+      "sustainalytics": "35.2 (high risk)",
+      "description": "Traditional ratings are vague; BB level cannot clearly distinguish whether the issue is environmental or social, and update cycle is as long as six months"
+    },
+    "root_causes": [
+      "Poor management of foreign workers",
+      "Insufficient supply chain transparency",
+      "Weak supervision mechanisms",
+      "Historical legacy issues"
+    ],
+    "metrics": {
+      "foreign_workers": "Approximately 70% of workers are foreign",
+      "labor_complaints": "Over 200 complaints from 2018-2020",
+      "improvement_investment": "Over MYR 100 million (invested in 2024)"
+    }
+  },
+  "supply_chain": {
+    "upstream": {
+      "name": "FGV Holdings Berhad",
+      "role": "Palm Oil Raw Material Supplier",
+      "location": "Malaysia (Pahang State, Johor State, etc.)",
+      "plantations": "Approximately 355,000 hectares of plantations",
+      "risk_alert": true,
+      "production_capacity": "Annual production of approximately 4.5 million tons of palm oil"
+    },
+    "midstream": {
+      "name": "COFCO Corporation",
+      "role": "Food Processor and Brand Owner",
+      "location": "China",
+      "products": [
+        "Fortune Edible Oil",
+        "Arowana Blended Oil",
+        "Other food processing products"
+      ],
+      "exposure": "FGV accounts for approximately 18% of COFCO's palm oil procurement (estimated)",
+      "annual_procurement": "Approximately 800,000 tons of palm oil (total)",
+      "dependency": "Medium dependency, but FGV is one of the important suppliers"
+    },
+    "downstream": {
+      "markets": [
+        "European Union",
+        "United States",
+        "China",
+        "Southeast Asia"
+      ],
+      "regulations": {
+        "eu": "EU EUDR Regulation (effective December 2024) requires zero-deforestation proof and due diligence; non-compliant companies face fines up to 4% of annual turnover",
+        "us": "U.S. CBP has issued import ban on FGV; any goods containing FGV products are prohibited from entry and subject to detention and fines. FGV submitted petition to modify WRO in June 2024, but review cycle requires 6-12 months",
+        "china": "Chinese consumers are increasingly concerned about sustainability; green-certified products command a 5-10% premium, brand reputation risk is rising"
+      },
+      "market_impact": {
+        "eu": "High risk - strict enforcement of EUDR regulation",
+        "us": "Extremely high risk - currently still banned from import (remediation underway but not lifted)",
+        "china": "Medium risk - increasing consumer awareness"
+      }
+    },
+    "impact_alert": {
+      "severity": "High",
+      "message": "⚠️ Urgent Risk Alert! Your supplier FGV's high-risk S indicator has triggered the U.S. CBP import ban (since 2020). Although FGV submitted a petition to modify the WRO in June 2024 and invested over MYR 100 million in remediation, the ban has not been lifted. This means:\n\n1. Any products containing FGV palm oil still cannot enter the U.S. market\n2. EU EUDR will conduct strict review of supply chain transparency\n3. International brand clients may request supplier replacement due to reputation risk\n4. CBP review cycle takes 6-12 months; short-term risk persists\n\nIt is recommended to immediately initiate supplier ESG audit, evaluate alternatives, and continue monitoring FGV's remediation progress."
+    },
+    "risk_scenarios": [
+      {
+        "scenario": "Worst Case",
+        "probability": "20%",
+        "impact": "FGV petition fails, ban remains long-term. U.S. market completely closed, EU clients suspend procurement, potential annual loss of USD 50 million",
+        "mitigation": "Immediately start supplier diversification, reduce FGV dependence to below 5% within 6 months"
+      },
+      {
+        "scenario": "Most Likely (Medium)",
+        "probability": "60%",
+        "impact": "FGV lifts ban in first half of 2025, but continued supervision required. Compliance cost increases by approx. USD 2 million/year",
+        "mitigation": "Obtain GreenLink certification, prove supply chain transparency and ESG compliance to clients, and prepare alternative suppliers"
+      },
+      {
+        "scenario": "Best Case",
+        "probability": "20%",
+        "impact": "FGV lifts CBP ban by end of 2024 and completes full remediation",
+        "mitigation": "Stay vigilant, establish continuous ESG monitoring mechanism to ensure issues do not recur"
+      }
+    ]
+  },
+  "greenlink_advantage": {
+    "vs_traditional_rating": {
+      "traditional": {
+        "rating": "MSCI BB level",
+        "problem": "Vague, cannot distinguish E and S risks",
+        "update_frequency": "Annual update (lagging by 6 months)",
+        "cost": "High subscription fee (tens of thousands USD per year)",
+        "recent_case": "July 2024 FGV submitted petition, but traditional rating has not yet updated to reflect this progress"
+      },
+      "greenlink": {
+        "e_rating": "Low Risk (25/100)",
+        "s_rating": "High Risk (75/100)",
+        "precision": "Precise positioning: social issues are the core risk, environmental performance is actually good",
+        "update_frequency": "Weekly update (real-time tracking of news and announcements)",
+        "cost": "Based on free data, cost reduced by 90%",
+        "recent_case": "After FGV submitted the petition in July 2024, GreenLink system has synchronously updated the risk assessment"
+      }
+    },
+    "data_sources": {
+      "environment": "Sentinel-2 satellite data (free)",
+      "social": "CBP official website, company announcements, mainstream media (free)",
+      "technology": "Python automated analysis"
+    },
+    "key_insights": [
+      "FGV's environmental performance is actually good (satellite verified no deforestation), traditional ratings confused E and S risks",
+      "The real risk comes from the social dimension (labor issues), which requires public opinion monitoring rather than satellite data",
+      "E/S separate scoring allows companies to respond precisely instead of investing blindly",
+      "Real-time tracking: FGV has been actively remediating in 2024, but short-term risk still exists and requires continued monitoring"
+    ]
+  },
+  "metadata": {
+    "report_version": "2.0",
+    "last_updated": "2024-11-07",
+    "data_sources_count": 3,
+    "latest_event": "2024-07-05 FGV submitted petition to modify WRO",
+    "analysis_method": "Alternative Data + AI",
+    "confidence_level": "High",
+    "next_review": "2024-12-07"
+  }
+}
+</DOCUMENT>
