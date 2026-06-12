@@ -249,7 +249,6 @@ tab1, tab2, tab3, tab4 = st.tabs([
 
 # ---------- TAB 1: Risk Monitoring ----------
 with tab1:
-    # First row: Company info + Rating comparison (left wide) + Core metrics (right)
     col_header, col_chart = st.columns([3, 2])
     
     with col_header:
@@ -265,7 +264,6 @@ with tab1:
         trad_data = data.get('traditional_rating') or data.get('social', {}).get('traditional_rating')
         rating_val = trad_data.get('rating', trad_data.get('msci', 'N/A')) if isinstance(trad_data, dict) else (trad_data if isinstance(trad_data, str) else 'N/A')
         
-        # Rating cards
         c1, c2 = st.columns(2)
         with c1:
             st.markdown(f"""
@@ -307,7 +305,6 @@ with tab1:
     
     st.markdown("---")
     
-    # Second part: Environmental Risk (E) and Social Evidence Chain (S)
     st.markdown('<div class="section-header">🌍 SATELLITE_LINK // Environmental Risk (E)</div>', unsafe_allow_html=True)
     col_env, col_soc = st.columns([1, 1.15])
     
@@ -470,12 +467,20 @@ with tab3:
     scf_df["Dynamic Credit (10k)"] = (scf_df["Base Credit (10k)"] * scf_df["Adjustment Factor"]).astype(int)
     st.dataframe(scf_df, use_container_width=True, hide_index=True)
 
+# ---------- TAB 4: B2C（已修改二维码链接） ----------
 with tab4:
     st.markdown("### 📱 Product Digital Twin & Trust Traceability (B2C)")
     col1, col2 = st.columns([1, 2])
+    
     with col1:
-        st.markdown(f"""<div style="background: #FFF; padding: 15px; border-radius: 10px; display: inline-block;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://xikai0906.github.io/green-link-demo/" width="100%" /></div>""", unsafe_allow_html=True)
+        # ==================== 已更新为英文仓库链接 ====================
+        st.markdown(f"""
+        <div style="background: #FFF; padding: 15px; border-radius: 10px; display: inline-block;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://xikai0906.github.io/green-link-demo-EN/" width="100%" />
+        </div>
+        """, unsafe_allow_html=True)
         st.markdown('<p style="text-align:center; margin-top:10px; color:#00F2FF;">SCAN TO VERIFY</p>', unsafe_allow_html=True)
+    
     with col2:
         st.markdown("""
         <div class="product-trace-card">
@@ -485,9 +490,15 @@ with tab4:
                 <div style="width: 30%;"><div style="color: #666; font-size: 0.8rem;">ORIGIN</div><div style="color: #00F2FF; font-size: 1.2rem; font-weight: bold;">Johor, MY</div><div style="color: #555; font-size: 0.7rem;">Satellite Checked</div></div>
                 <div style="width: 30%;"><div style="color: #666; font-size: 0.8rem;">LABOR</div><div style="color: #00F2FF; font-size: 1.2rem; font-weight: bold;">ILO Compliant</div><div style="color: #555; font-size: 0.7rem;">Audit Passed</div></div>
             </div>
-            <div style="background: rgba(0, 255, 65, 0.1); border: 1px dashed #00FF41; padding: 10px; border-radius: 8px;"><p style="color: #00FF41; margin: 0; font-size: 0.9rem;">✅ <strong>Blockchain Evidence Hash:</strong> 0x7f83...9a2b<br>This product's supply chain fully complies with GreenLink sustainability standards</p></div>
+            <div style="background: rgba(0, 255, 65, 0.1); border: 1px dashed #00FF41; padding: 10px; border-radius: 8px;">
+                <p style="color: #00FF41; margin: 0; font-size: 0.9rem;">
+                    ✅ <strong>Blockchain Evidence Hash:</strong> 0x7f83...9a2b<br>
+                    This product's supply chain fully complies with GreenLink sustainability standards
+                </p>
+            </div>
         </div>
         """, unsafe_allow_html=True)
+
     st.markdown("---")
     with st.expander("📜 Underlying Compliance Protocols & International Standards (COMPLIANCE PROTOCOLS)", expanded=True):
         c1, c2, c3 = st.columns(3)
