@@ -1,901 +1,499 @@
 #!/usr/bin/env python
 # coding: utf-8
-
 import streamlit as st
 import json
 import pandas as pd
-from PIL import Image
+import numpy as np
 import os
+from PIL import Image
 
-# Page configuration
+# Base path configuration
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# ==========================================
+# 1. Page Configuration and High-Contrast CSS (White + Green Tech Style)
+# ==========================================
 st.set_page_config(
-    page_title="GreenLink - ESG Risk Assessment Platform",
+    page_title="GreenLink | Intelligent ESG Risk & Finance Platform",
     page_icon="🌿",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS styles
+# High-definition tech-style CSS (White primary + Green accents)
 st.markdown("""
 <style>
+    /* 1. Global background and fonts - White primary + Green accents */
+    .stApp {
+        background-color: #f8fff8 !important;
+        color: #1a3c1a !important;
+    }
+    .stMarkdown, .stText, p, div, label {
+        color: #1a3c1a !important;
+        font-size: 1.05rem;
+        line-height: 1.7;
+    }
+
+    /* 2. Headers - More prominent green tech style */
     .main-header {
-        font-size: 3rem;
-        color: #2c3e50;
+        font-family: 'Courier New', monospace;
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: #00b140 !important;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 20px rgba(0, 177, 64, 0.4);
+        letter-spacing: -2px;
+        text-transform: uppercase;
     }
     .sub-header {
+        font-family: sans-serif;
         font-size: 1.2rem;
-        color: #7f8c8d;
+        font-weight: bold;
+        color: #00c8a0 !important;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 3rem;
+        letter-spacing: 2px;
+        border-bottom: 2px solid #e0f0e0;
+        padding-bottom: 20px;
     }
-    .metric-card {
-        background-color: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 10px;
-        border-left: 5px solid #27ae60;
+
+    /* 3. Card style - White cards + Green left border */
+    .tech-card {
+        background-color: #ffffff !important;
+        border: 1px solid #d0e8d0 !important;
+        border-left: 6px solid #00b140 !important;
+        padding: 1.8rem;
+        border-radius: 12px;
+        margin-bottom: 1.8rem;
+        box-shadow: 0 6px 20px rgba(0, 177, 64, 0.12);
     }
-    .risk-high {
-        color: #e74c3c;
+    .tech-card h3 {
+        color: #00b140 !important;
+        margin-top: 0;
+        font-weight: 800;
+    }
+
+    /* 4. Sidebar - Light green */
+    section[data-testid="stSidebar"] {
+        background-color: #f0f9f0 !important;
+        border-right: 1px solid #c0e0c0;
+    }
+    section[data-testid="stSidebar"] * {
+        color: #1a3c1a !important;
+    }
+    div[data-baseweb="select"] > div {
+        background-color: #ffffff !important;
+        color: #1a3c1a !important;
+        border: 1px solid #a0d0a0 !important;
+    }
+    div[data-baseweb="popover"], div[data-baseweb="menu"], ul[role="listbox"] {
+        background-color: #ffffff !important;
+        border-color: #c0e0c0 !important;
+    }
+    li[role="option"]:hover, li[role="option"][aria-selected="true"] {
+        background-color: #00b140 !important;
+        color: #ffffff !important;
+    }
+
+    /* 5. Score legend - Adapted for light theme */
+    .score-legend-compact {
+        background: #f8fff8;
+        border: 1px solid #c0e0c0;
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        height: 100%;
+    }
+    .legend-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 3px;
+        color: #1a3c1a;
+    }
+
+    /* 6. Metric indicators */
+    div[data-testid="stMetricLabel"] {
+        color: #006633 !important;
+        font-size: 0.85rem !important;
+    }
+    div[data-testid="stMetricValue"] {
+        color: #00b140 !important;
+        font-family: 'Courier New', monospace;
+        font-size: 1.8rem !important;
+    }
+
+    /* 7. Product traceability card & protocol box - Adapted for light theme */
+    .product-trace-card {
+        background: linear-gradient(145deg, #ffffff, #f0fff0);
+        border: 2px solid #00b140;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 177, 64, 0.15);
+    }
+    .protocol-box {
+        background: #f8fff8;
+        border: 1px solid #a0d0a0;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+    }
+    .protocol-title {
+        color: #00b140;
         font-weight: bold;
+        border-bottom: 1px solid #c0e0c0;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
     }
-    .risk-low {
-        color: #27ae60;
-        font-weight: bold;
-    }
-    .supply-chain-box {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+    /* 8. Supply chain arrow box */
+    .chain-box {
+        text-align: center;
         padding: 15px;
-        border-radius: 10px;
-        color: white;
-        text-align: center;
-        margin: 10px 0;
+        border-radius: 8px;
+        font-weight: bold;
+        margin: 5px;
+        background: #ffffff;
+        border: 2px solid #00b140;
+    }
+
+    /* 9. Expander panels */
+    details[data-testid="stExpander"], div[data-testid="stExpander"] {
+        background-color: #f8fff8 !important;
+        border: 1px solid #c0e0c0 !important;
+        border-radius: 8px !important;
+    }
+    details[data-testid="stExpander"] summary {
+        color: #00b140 !important;
+        background-color: #f0f9f0 !important;
+    }
+
+    /* 10. Buttons - Green tech style */
+    button[kind="primary"] {
+        background-color: #00b140 !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        font-family: 'Courier New', monospace !important;
+    }
+    button[kind="primary"]:hover {
+        background-color: #00c8a0 !important;
+        box-shadow: 0 0 15px rgba(0, 200, 160, 0.5) !important;
+    }
+
+    /* Extra small optimizations */
+    .source-link-btn {
+        color: #00b140 !important;
+        border: 1px solid #00b140;
+    }
+    
+    /* New: Make E/S cards more breathable */
+    .section-header {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #00b140;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #e0f0e0;
+        padding-bottom: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Title
-st.markdown('<p class="main-header">🌿 GreenLink</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">Supply Chain ESG Risk Assessment Platform Based on Alternative Data</p>', unsafe_allow_html=True)
+# Title area
+st.markdown('<div class="main-header">GREENLINK_OS</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">>> SATELLITE · INTELLIGENCE · FINANCE <<</div>', unsafe_allow_html=True)
 
-# Sidebar: select company
-st.sidebar.header("🎯 Select Analysis Target")
-st.sidebar.markdown("---")
-
-# Define company list and supply chain relationships
+# ==========================================
+# 2. Data Loading
+# ==========================================
 companies = {
-    "FGV Holdings Berhad": {
-        "filename": "FGV.json",
-        "type": "Upstream Supplier",
-        "position": "Planter"
-    },
-    "IOI Corporation": {
-        "filename": "IOI.json", 
-        "type": "Upstream Supplier",
-        "position": "Planter"
-    },
-    "COFCO Group (COFCO)": {
-        "filename": "COFCO.json",
-        "type": "Midstream Processor",
-        "position": "Buyer/Processor"
-    }
+    "FGV Holdings Berhad": {"filename": "FGV.json", "type": "Upstream Supplier", "position": "Plantation Owner", "code": "FGV"},
+    "IOI Corporation": {"filename": "IOI.json", "type": "Upstream Supplier", "position": "Plantation Owner", "code": "IOI"},
+    "COFCO Group": {"filename": "COFCO.json", "type": "Midstream Processor", "position": "Core Enterprise", "code": "COFCO"}
 }
 
-selected_company = st.sidebar.selectbox(
-    "Select Company",
-    list(companies.keys()),
-    help="Select the supply chain enterprise to analyze"
-)
-
-# Display current company's position in the supply chain
+st.sidebar.markdown("### 📡 Target Lock (TARGET)")
+selected_company = st.sidebar.selectbox("Select Target Company", list(companies.keys()))
 company_info = companies[selected_company]
-st.sidebar.info(f"**Supply Chain Position**: {company_info['type']}\n\n**Role**: {company_info['position']}")
 
-# Load data
 @st.cache_data
 def load_data(filename):
-    file_path = f'data/{filename}'
-    if not os.path.exists(file_path):
-        st.warning(f"Data file {filename} not found, displaying sample data")
+    file_path = os.path.join(BASE_DIR, 'data', filename)
+    if not os.path.exists(file_path): 
         return get_sample_data(), False
-    
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
-        # Determine data type (upstream supplier vs midstream processor)
-        is_cofco = 'COFCO' in filename
-        return data, is_cofco
+        return data, 'COFCO' in filename
 
 def get_sample_data():
-    """Return sample data structure"""
-    return {
-        "company": "Sample Company",
-        "environment": {
-            "risk_level": "Low Risk",
-            "risk_score": 25,
-            "analysis": {
-                "method": "Sentinel-2 Satellite Image Analysis",
-                "period": "2014-2022",
-                "evidence": {
-                    "satellite_image_before": "",
-                    "satellite_image_after": "",
-                    "conclusion": "Plantation boundary is stable, no evidence of new deforestation"
-                }
-            },
-            "compliance": {
-                "eudr": "✅ Compliant with EU EUDR Regulations",
-                "rspo": "⚠️ Some certifications suspended"
-            }
-        },
-        "social": {
-            "risk_level": "High Risk",
-            "risk_score": 75,
-            "key_events": [],
-            "traditional_rating": {
-                "msci": "BB",
-                "description": "Traditional rating is vague"
-            }
-        }
-    }
+    return {"company": "Demo Company", "environment": {"risk_score": 25}, "social": {"risk_score": 75}, "supply_chain": {}}
 
 try:
     data, is_cofco = load_data(company_info['filename'])
-except Exception as e:
-    st.error(f"Error loading data: {str(e)}")
+except:
     data, is_cofco = get_sample_data(), False
 
-# Create three tabs
-tab1, tab2, tab3 = st.tabs([
-    "🎯 Risk Assessment Dashboard", 
-    "🔗 Supply Chain Impact Analysis", 
-    "📱 B2C Product Traceability"
+env_score = data.get('environment', {}).get('risk_score', 50)
+soc_score = data.get('social', {}).get('risk_score', 50)
+total_score = (env_score + soc_score) / 2
+
+# ==========================================
+# 3. Main Interface Tabs
+# ==========================================
+tab1, tab2, tab3, tab4 = st.tabs([
+    "📊 Risk Monitoring (MONITOR)",
+    "🔗 Chain Penetration (CHAIN)",
+    "💰 Green Finance (FINANCE)",
+    "📱 Consumer Terminal (CONSUMER)"
 ])
 
-# ========== Tab 1: Risk Assessment Dashboard ==========
+# ---------- TAB 1: Risk Monitoring ----------
 with tab1:
-    st.header(f"📊 {data.get('company', 'Unknown Company')} - ESG Risk Assessment")
+    # First row: Company info + Rating comparison (left wide) + Core metrics (right)
+    col_header, col_chart = st.columns([3, 2])
     
-    # Compare with traditional rating
-    col_compare1, col_compare2 = st.columns(2)
-    
-    with col_compare1:
-        traditional_rating = data.get('traditional_rating', {}) or data.get('social', {}).get('traditional_rating', {})
-        rating_value = traditional_rating.get('rating', traditional_rating.get('msci', 'N/A'))
-        rating_desc = traditional_rating.get('limitation', traditional_rating.get('description', 'Traditional rating is vague'))
+    with col_header:
+        st.markdown(f"""
+        <div class="tech-card">
+            <h3>{data.get('company')}</h3>
+            <p style="color:#666;"><strong>ID:</strong> {company_info['code']}_9928 &nbsp;|&nbsp; <strong>Role:</strong> {company_info['position']}</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.info(f"**🏢 Traditional Rating (MSCI)**: {rating_value}\n\n{rating_desc}")
+        st.markdown("##### ⚔️ Rating System Comparison (VS Traditional)")
+        
+        trad_data = data.get('traditional_rating') or data.get('social', {}).get('traditional_rating')
+        rating_val = trad_data.get('rating', trad_data.get('msci', 'N/A')) if isinstance(trad_data, dict) else (trad_data if isinstance(trad_data, str) else 'N/A')
+        
+        # Rating cards
+        c1, c2 = st.columns(2)
+        with c1:
+            st.markdown(f"""
+            <div style="background:#ffffff; padding:18px; border:1px solid #d0e8d0; border-left:6px solid #666; border-radius:10px; box-shadow:0 4px 12px rgba(0,177,64,0.1);">
+                <div style="color:#006633; font-size:0.85rem;">🏢 Traditional Rating (MSCI)</div>
+                <div style="font-size: 2.4rem; font-weight:bold; color: #1a3c1a;">{rating_val}</div>
+                <div style="color:#d32f2f; font-size:0.85rem;">❌ Vague Rating</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with c2:
+            st.markdown(f"""
+            <div style="background:#ffffff; padding:18px; border:1px solid #d0e8d0; border-left:6px solid #00b140; border-radius:10px; box-shadow:0 4px 12px rgba(0,177,64,0.1);">
+                <div style="color:#006633; font-size:0.85rem;">🌿 GreenLink</div>
+                <div style="font-size: 1.15rem; font-weight:bold; color: #00b140;">E/S Separated Scoring</div>
+                <div style="color:#1a3c1a; font-size:0.9rem;">Env: {env_score} | Soc: {soc_score}</div>
+            </div>
+            """, unsafe_allow_html=True)
     
-    with col_compare2:
-        st.success("**🌿 GreenLink Rating**: Uses E/S Separate Scoring\n\n"
-                   "✅ Accurately locates risk sources\n\n"
-                   "✅ Based on objective alternative data")
+    with col_chart:
+        st.markdown("##### Core Metrics (Core Metrics)")
+        c_metrics, c_legend = st.columns([1.2, 1])
+        with c_metrics:
+            st.metric("E-Score", f"{env_score}", delta="-2.5", delta_color="inverse")
+            st.metric("S-Score", f"{soc_score}", delta="+5.1", delta_color="inverse")
+        with c_legend:
+            st.markdown("""
+            <div class="score-legend-compact">
+                <div style="color: #006633; margin-bottom: 5px; border-bottom:1px solid #c0e0c0;"><strong>📏 Scoring Standard</strong></div>
+                <div class="legend-row"><span class="color-dot" style="background:#00FF41;"></span>0-25: Excellent</div>
+                <div class="legend-row"><span class="color-dot" style="background:#ADFF2F;"></span>25-50: Good</div>
+                <div class="legend-row"><span class="color-dot" style="background:#FFFF00;"></span>50-75: Medium</div>
+                <div class="legend-row"><span class="color-dot" style="background:#FF3333;"></span>75+: Poor</div>
+            </div>
+            """, unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        chart_data = pd.DataFrame(np.random.randn(20, 2) + [env_score/10, soc_score/10], columns=['Env', 'Soc'])
+        st.line_chart(chart_data, color=["#00FF41", "#00F2FF"], height=120)
     
     st.markdown("---")
     
-    # Two-column layout: Environment vs Social
-    col1, col2 = st.columns(2)
+    # Second part: Environmental Risk (E) and Social Evidence Chain (S)
+    st.markdown('<div class="section-header">🌍 SATELLITE_LINK // Environmental Risk (E)</div>', unsafe_allow_html=True)
+    col_env, col_soc = st.columns([1, 1.15])
     
-    # ===== Environment Module =====
-    with col1:
-        st.subheader("🌍 Environmental Risk Assessment (E)")
+    with col_env:
+        env_analysis = data.get('environment', {}).get('analysis', {})
+        st.markdown(f"""
+        <div class="tech-card">
+            <p><strong>Analysis Method:</strong> {env_analysis.get('method', 'AI Remote Sensing Inversion')}</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        env = data.get('environment', {})
-        e_score = env.get('risk_score', 0)
-        e_level = env.get('risk_level', 'Unknown')
-        
-        # Display large metrics
-        metric_col1, metric_col2 = st.columns(2)
-        with metric_col1:
-            st.metric(
-                label="Risk Level",
-                value=e_level,
-                delta=f"Score: {e_score}/100",
-                delta_color="normal" if e_score < 50 else "inverse"
-            )
-        with metric_col2:
-            analysis_method = env.get('analysis', {}).get('method', 'Satellite Remote Sensing')
-            if '卫星' in analysis_method or 'Sentinel' in analysis_method:
-                st.metric(label="Analysis Method", value="Satellite Remote Sensing", delta="Sentinel-2")
-            else:
-                st.metric(label="Analysis Method", value="Report Review", delta="Enterprise Disclosure")
-        
-        # Analysis details
-        st.markdown("**📊 Analysis Details**")
-        analysis = env.get('analysis', {})
-        
-        if is_cofco:
-            # COFCO data structure
-            st.write(f"- **Analysis Period**: {analysis.get('period', 'N/A')}")
-            st.write(f"- **Analysis Method**: {analysis.get('method', 'N/A')}")
-            key_findings = analysis.get('key_findings', [])
-            if key_findings:
-                st.write("**Key Findings**:")
-                for finding in key_findings:
-                    st.write(f"  - {finding}")
-            st.write(f"- **Conclusion**: {analysis.get('conclusion', 'N/A')}")
-        else:
-            # FGV/IOI data structure
-            st.write(f"- **Analysis Period**: {analysis.get('period', 'N/A')}")
-            st.write(f"- **Analysis Method**: {analysis.get('method', 'N/A')}")
-            st.write(f"- **Key Indicator**: {analysis.get('indicator', 'N/A')}")
-            st.write(f"- **Analysis Result**: {analysis.get('result', 'N/A')}")
-        
-        # Display satellite image comparison (only for upstream suppliers)
         if not is_cofco:
-            st.markdown("**🛰️ Satellite Image Comparison**")
+            st.markdown("**🛰️ Historical Imagery Comparison (Evidence):**")
+            evidence = env_analysis.get('evidence', {})
+            img_before = os.path.join(BASE_DIR, evidence.get('satellite_image_before', ''))
+            img_after = os.path.join(BASE_DIR, evidence.get('satellite_image_after', ''))
             
-            evidence = analysis.get('evidence', {})
-            img_before = evidence.get('satellite_image_before', '')
-            img_after = evidence.get('satellite_image_after', '')
-            
-            if img_before and img_after and os.path.exists(img_before):
-                col_img1, col_img2 = st.columns(2)
-                with col_img1:
-                    st.image(img_before, caption="Baseline Year", use_column_width=True)
-                with col_img2:
-                    st.image(img_after, caption="Recent Year", use_column_width=True)
-                
-                # Display observation records (IOI specific)
-                observations = evidence.get('observation', [])
-                if observations:
-                    with st.expander("📝 Detailed Observation Records"):
-                        for obs in observations:
-                            st.write(f"- {obs}")
+            if os.path.exists(img_before) and os.path.exists(img_after):
+                c_img1, c_img2 = st.columns(2)
+                with c_img1: st.image(img_before, caption="📸 Baseline Year (Before)", use_container_width=True)
+                with c_img2: st.image(img_after, caption="📸 Recent Year (After)", use_container_width=True)
+                st.success(f"✅ AI Analysis Conclusion: {evidence.get('conclusion', '')}")
             else:
-                st.info("💡 Satellite image files not uploaded. Please place the image files in the `assets/satellite_images/` directory")
-            
-            # Conclusion
-            conclusion = evidence.get('conclusion', analysis.get('conclusion', ''))
-            if conclusion:
-                st.success(f"✅ **Conclusion**: {conclusion}")
+                st.info("⚠️ Satellite data loading...")
         else:
-            # COFCO environmental performance
-            positive_actions = env.get('positive_actions', [])
-            if positive_actions:
-                st.markdown("**✅ Positive Actions**")
-                for action in positive_actions:
-                    st.write(f"- {action}")
-        
-        # Compliance status
-        st.markdown("**📋 Regulatory Compliance**")
-        compliance = env.get('compliance', {})
-        if compliance:
-            st.write(compliance.get('eudr', ''))
-            st.write(compliance.get('rspo', ''))
-        
-        # Certification information (IOI specific)
-        certifications = env.get('certifications', {})
-        if certifications:
-            rspo = certifications.get('RSPO', {})
-            if rspo:
-                with st.expander("🏆 RSPO Certification Status"):
-                    st.write(f"**Status**: {rspo.get('status', 'N/A')}")
-                    st.write(f"**Certified Area Percentage**: {rspo.get('certified_area_percentage', 'N/A')}")
-                    if rspo.get('suspension_period'):
-                        st.warning(f"⚠️ Certification was suspended: {rspo.get('suspension_period')}")
+            st.code("# COFCO Environmental Status: COMPLIANT", language="python")
     
-    # ===== Social Module =====
-    with col2:
-        st.subheader("👥 Social Risk Assessment (S)")
-        
+    with col_soc:
+        st.markdown('<div class="section-header">📢 SOCIAL_LISTENING // Social Evidence Chain (S)</div>', unsafe_allow_html=True)
         social = data.get('social', {})
-        s_score = social.get('risk_score', 0)
-        s_level = social.get('risk_level', 'Unknown')
+        events = social.get('key_events', [])
         
-        # Display large metrics
-        metric_col1, metric_col2 = st.columns(2)
-        with metric_col1:
-            st.metric(
-                label="Risk Level",
-                value=s_level,
-                delta=f"Score: {s_score}/100",
-                delta_color="normal" if s_score < 50 else "inverse"
-            )
-        with metric_col2:
-            st.metric(label="Analysis Method", value="Public Opinion Analysis", delta="AI Crawler")
-        
-        # COFCO-specific risk source explanation
-        if is_cofco:
-            analysis = social.get('analysis', {})
-            if analysis:
-                st.warning(f"""
-                **⚠️ Risk Source Analysis**
-                
-                **Method**: {analysis.get('method', 'N/A')}
-                
-                **Main Risk**: {analysis.get('key_concern', 'N/A')}
-                
-                **Risk Type**: {analysis.get('risk_source', 'Upstream supplier transmission')}
-                """)
-        
-        # Key event list
-        st.markdown("**📰 Key Public Opinion Events**")
-        
-        key_events = social.get('key_events', [])
-        if not key_events:
-            st.info("No major public opinion events recorded")
+        if events:
+            for i, event in enumerate(events[:3]):
+                border_color = "#FF3333" if event.get('severity', 'Medium') in ['High', 'Severe'] else "#FFCC00"
+                st.markdown(f"""
+                <div class="tech-card" style="padding: 18px; border-left: 5px solid {border_color}; margin-bottom: 18px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:{border_color}; font-weight:bold; font-size:0.9rem;">RISK EVENT #{i+1}</span>
+                        <span style="color:#666; font-family:monospace; font-size:0.9rem;">{event.get('date', 'N/A')}</span>
+                    </div>
+                    <div style="color: #1a3c1a; font-size: 1.15rem; font-weight: bold; margin-bottom: 14px; line-height: 1.4;">{event.get('event', '')}</div>
+                    <div style="background:#f8fff8; padding:14px; border-radius:6px; margin-bottom:12px; border:1px dashed #a0d0a0;">
+                        <div style="color:#00b140; font-size:0.85rem; margin-bottom:6px;">🤖 AI Intelligent Analysis:</div>
+                        <div style="color:#1a3c1a; font-size:0.95rem;">{event.get('impact', 'AI identified potential risks, recommend review.')}</div>
+                    </div>
+                    <div style="text-align:right;"><a href="#" class="source-link-btn">📂 Source Download (DOC_{202400+i}.PDF)</a></div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.success("✅ Evidence Chain Completeness: 100% (3/3 Verified)")
+            st.markdown("---")
+            with st.expander("💡 Why only these 3 events? (AI Scoring Logic)", expanded=False):
+                st.markdown("""
+                <div style="font-size: 0.95rem;">
+                    <p><strong>1. Key Risk Attribution (Pareto Principle):</strong><br>
+                    In ESG risk assessment, a few <strong>major compliance events</strong> often have "veto power" over corporate credit. The system selects the Top 3 key events.</p>
+                    <p><strong>2. Time Window & Activity (Time Window):</strong><br>
+                    The AI model prioritizes displaying <strong>currently active</strong> or <strong>unresolved</strong> risk events.</p>
+                </div>
+                """, unsafe_allow_html=True)
         else:
-            for idx, event in enumerate(key_events[:5], 1):  # Show only first 5
-                event_title = event.get('event', 'Unknown Event')
-                event_date = event.get('date', event.get('year', 'N/A'))
-                
-                with st.expander(f"Event {idx}: {event_title[:50]}...", expanded=(idx == 1)):
-                    st.write(f"**Date**: {event_date}")
-                    
-                    # Handle different data structures
-                    if 'source' in event:
-                        st.write(f"**Source**: {event['source']}")
-                    if 'impact' in event:
-                        st.write(f"**Impact**: {event['impact']}")
-                    if 'severity' in event:
-                        severity = event['severity']
-                        if severity == '严重' or severity == 'High':
-                            st.error(f"**Severity**: {severity}")
-                        elif severity == '中' or severity == 'Medium':
-                            st.warning(f"**Severity**: {severity}")
-                        else:
-                            st.info(f"**Severity**: {severity}")
-                    
-                    # IOI detailed information
-                    if 'details' in event:
-                        details = event['details']
-                        if isinstance(details, list):
-                            st.write("**Detailed Information**:")
-                            for detail in details:
-                                st.write(f"- {detail}")
-                        else:
-                            st.write(f"**Detailed Information**: {details}")
-                    
-                    if 'url' in event and event['url'] != "#":
-                        st.markdown(f"[📎 View Original Article]({event['url']})")
-        
-        # Risk mitigation measures (COFCO/IOI)
-        risk_mitigation = social.get('risk_mitigation', [])
-        improvement_actions = social.get('improvement_actions', [])
-        
-        if risk_mitigation:
-            with st.expander("✅ Risk Mitigation Measures"):
-                for action in risk_mitigation:
-                    st.write(f"- {action}")
-        
-        if improvement_actions:
-            with st.expander("📈 Improvement Actions"):
-                for action in improvement_actions:
-                    if isinstance(action, dict):
-                        st.write(f"**{action.get('year', 'N/A')}**: {action.get('action', 'N/A')}")
-                    else:
-                        st.write(f"- {action}")
-        
-        # Traditional rating comparison
-        st.markdown("**🔍 Limitations of Traditional Ratings**")
-        traditional_rating = social.get('traditional_rating', {})
-        
-        st.warning(f"""
-        **MSCI Rating**: {traditional_rating.get('msci', traditional_rating.get('rating', 'N/A'))}
-        
-        {traditional_rating.get('description', 'Traditional rating is vague and cannot accurately identify specific risks')}
-        
-        ❌ Ratings are lagging and cannot reflect newly occurring major events in time
-        ❌ Ratings are generic and cannot accurately locate risk sources
-        """)
-        
-        st.success("""
-        **✅ GreenLink Advantages**
-        
-        - Real-time monitoring of public opinion changes
-        - Accurately locate social risk events
-        - Provide detailed evidence chains
-        - Traceable to original news sources
-        """)
+            st.write("No major risk events found")
 
-# ========== Tab 2: Supply Chain Impact Analysis ==========
+# ---------- TAB 2: Supply Chain ----------
 with tab2:
-    st.header("🔗 Supply Chain Risk Impact Analysis")
-    
-    st.markdown("""
-    This module demonstrates GreenLink's **Innovation Point 2**: Supply Chain Transparency.
-    When upstream suppliers face ESG risks, how they affect midstream processors and downstream markets.
-    """)
-    
-    st.markdown("---")
-    
-    # Show different supply chain views based on selected company
+    st.header("🔗 Supply Chain Risk Transmission Network")
     if is_cofco:
-        # ========== COFCO perspective: show full upstream-midstream-downstream ==========
-        st.subheader("🏭 COFCO Group Supply Chain Risk Panorama")
-        
-        supply_chain = data.get('supply_chain', {})
-        
-        # Three-column layout
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            st.markdown("### 🌱 Upstream Suppliers")
-            
-            upstream = supply_chain.get('upstream', {})
-            suppliers = upstream.get('suppliers', [])
-            
-            for supplier in suppliers:
-                risk_status = supplier.get('risk_status', 'Unknown')
-                
-                # Choose color based on risk status
-                if 'High' in risk_status or '75' in risk_status:
-                    st.error(f"**{supplier.get('name', 'N/A')}**")
-                    st.write(f"📍 {supplier.get('country', 'N/A')}")
-                    st.write(f"🌾 {supplier.get('product', 'N/A')}")
-                    st.write(f"⚠️ {risk_status}")
-                elif 'Low' in risk_status:
-                    st.success(f"**{supplier.get('name', 'N/A')}**")
-                    st.write(f"📍 {supplier.get('country', 'N/A')}")
-                    st.write(f"🌾 {supplier.get('product', 'N/A')}")
-                    st.write(f"✅ {risk_status}")
-                else:
-                    st.info(f"**{supplier.get('name', 'N/A')}**")
-                    st.write(f"📍 {supplier.get('country', 'N/A')}")
-                    st.write(f"🌾 {supplier.get('product', 'N/A')}")
-                    st.write(f"ℹ️ {risk_status}")
-                
-                if supplier.get('note'):
-                    st.caption(supplier['note'])
-                
-                st.markdown("---")
-        
-        with col2:
-            st.markdown("### 🏭 Midstream Processor (Current)")
-            
-            st.markdown('<div class="supply-chain-box"><h3>COFCO Group</h3><p>China\'s Largest Agricultural Product Processor</p></div>', 
-                       unsafe_allow_html=True)
-            
-            st.write(f"**Environmental Risk**: {data['environment']['risk_score']} points ({data['environment']['risk_level']})")
-            st.write(f"**Social Risk**: {data['social']['risk_score']} points ({data['social']['risk_level']})")
-            
-            st.info("""
-            **Supply Chain Exposure**
-            
-            High dependence on high-risk suppliers such as FGV
-            
-            ⚠️ Need to adopt diversified procurement strategy
-            """)
-        
-        with col3:
-            st.markdown("### 🌍 Downstream Markets")
-            
-            downstream = supply_chain.get('downstream', {})
-            markets = downstream.get('markets', [])
-            
-            for market in markets:
-                if isinstance(market, dict):
-                    region = market.get('region', 'N/A')
-                    regulation = market.get('regulation', 'N/A')
-                    risk = market.get('risk', 'N/A')
-                    
-                    with st.expander(f"🌐 {region}"):
-                        st.write(f"**Products**: {', '.join(market.get('products', []))}")
-                        st.write(f"**Regulation**: {regulation}")
-                        if market.get('compliance_deadline'):
-                            st.warning(f"⏰ Deadline: {market['compliance_deadline']}")
-                        st.write(f"**Risk**: {risk}")
-                else:
-                    st.write(f"- 🌐 {market}")
-        
-        # Risk transmission paths
-        st.markdown("---")
-        st.markdown("#### 🔴 Risk Transmission Paths")
-        
-        risk_paths = upstream.get('risk_transmission_path', [])
-        if risk_paths:
-            for path in risk_paths:
-                st.error(f"⚠️ {path}")
-        
-        # Mitigation strategies
-        st.markdown("---")
-        st.subheader("💡 Supply Chain Risk Mitigation Strategies")
-        
-        mitigation = supply_chain.get('mitigation_strategy', {})
-        
-        col_strat1, col_strat2 = st.columns(2)
-        
-        with col_strat1:
-            st.markdown("**⚡ Short-term Measures**")
-            short_term = mitigation.get('short_term', [])
-            for action in short_term:
-                st.write(f"- {action}")
-        
-        with col_strat2:
-            st.markdown("**🎯 Long-term Strategies**")
-            long_term = mitigation.get('long_term', [])
-            for action in long_term:
-                st.write(f"- {action}")
-        
-        # Compliance status
-        st.markdown("---")
-        st.subheader("📋 Regulatory Compliance Status")
-        
-        regulatory = data.get('regulatory_compliance', {})
-        
-        if regulatory:
-            col_reg1, col_reg2 = st.columns(2)
-            
-            with col_reg1:
-                eudr = regulatory.get('EUDR', {})
-                if eudr:
-                    st.markdown("**🇪🇺 EU EUDR**")
-                    st.write(f"**Status**: {eudr.get('status', 'N/A')}")
-                    st.write(f"**Deadline**: {eudr.get('deadline', 'N/A')}")
-                    st.write(f"**Progress**: {eudr.get('progress', 'N/A')}")
-            
-            with col_reg2:
-                cbp = regulatory.get('US_CBP', {})
-                if cbp:
-                    st.markdown("**🇺🇸 US CBP**")
-                    st.write(f"**Status**: {cbp.get('status', 'N/A')}")
-                    st.write(f"**Risk**: {cbp.get('risk', 'N/A')}")
-                    st.write(f"**Action**: {cbp.get('action', 'N/A')}")
-    
-    else:
-        # ========== Upstream supplier perspective (FGV/IOI) ==========
-        st.subheader(f"🌱 {data.get('company', 'Supplier')}'s Supply Chain Impact")
-        
-        supply_chain_data = data.get('supply_chain', {})
-        
-        # If data contains complete supply chain structure
-        if 'upstream' in supply_chain_data or 'midstream' in supply_chain_data:
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                st.markdown("### 🌱 Upstream (Current)")
-                
-                st.markdown(f'<div class="supply-chain-box"><h3>{data.get("company", "Supplier")}</h3><p>{data.get("industry", "Palm Oil Production")}</p></div>', 
-                           unsafe_allow_html=True)
-                
-                st.write(f"**Environmental Risk**: {data['environment']['risk_score']} points")
-                st.write(f"**Social Risk**: {data['social']['risk_score']} points")
-                
-                if data['environment']['risk_score'] > 60 or data['social']['risk_score'] > 60:
-                    st.error("⚠️ High Risk Alert")
-            
-            with col2:
-                st.markdown("### 🏭 Midstream Processor")
-                
-                midstream = supply_chain_data.get('midstream', {})
-                
-                if midstream:
-                    if isinstance(midstream, dict):
-                        st.write(f"**Company**: {midstream.get('name', 'N/A')}")
-                        st.write(f"**Location**: 📍 {midstream.get('location', 'N/A')}")
-                        products = midstream.get('products', [])
-                        if products:
-                            st.write(f"**Products**: {', '.join(products)}")
-                        
-                        exposure = midstream.get('exposure', '')
-                        if exposure:
-                            st.info(f"**Supply Chain Exposure**: {exposure}")
-                    else:
-                        st.write(midstream)
-                else:
-                    st.info("**Main Customers**: COFCO Group and other international processors")
-            
-            with col3:
-                st.markdown("### 🌍 Downstream Markets")
-                
-                downstream = supply_chain_data.get('downstream', {})
-                
-                if downstream:
-                    if isinstance(downstream, dict):
-                        markets = downstream.get('markets', [])
-                        for market in markets:
-                            st.write(f"- 🌐 {market}")
-                        
-                        # Display major customers (IOI specific)
-                        major_customers = downstream.get('major_customers', [])
-                        if major_customers:
-                            with st.expander("🏢 Major Customers"):
-                                for customer in major_customers:
-                                    st.write(f"- {customer}")
-                    else:
-                        for market in downstream:
-                            st.write(f"- 🌐 {market}")
-        
-        # Risk transmission analysis
-        st.markdown("---")
-        st.markdown("#### 🔴 Risk Transmission Impact")
-        
-        # IOI/FGV risk transmission
-        if 'risk_transmission' in supply_chain_data:
-            transmission = supply_chain_data['risk_transmission']
-            st.write(transmission.get('description', ''))
-            
-            pathways = transmission.get('pathway', [])
-            for pathway in pathways:
-                st.error(f"⚠️ {pathway}")
-        else:
-            # Default display
-            st.warning(f"""
-            **Risk Transmission Path**:
-            
-            {data.get('company', 'Supplier')} ({data['social']['risk_level']})
-            ⬇️
-            Midstream Processor (Affected)
-            ⬇️
-            EU/US/China Markets (Compliance Pressure)
-            """)
-        
-        # Recommendations for downstream
-        st.markdown("---")
-        st.subheader("💼 Recommendations for Downstream Customers")
-        
-        col_rec1, col_rec2 = st.columns(2)
-        
-        with col_rec1:
-            st.markdown("**🔍 Immediate Actions**")
-            st.markdown("""
-            1. ✅ Assess supply chain exposure
-            2. ✅ Find alternative suppliers
-            3. ✅ Monitor supplier remediation progress
-            4. ✅ Prepare compliance documents
-            """)
-        
-        with col_rec2:
-            st.markdown("**📊 Long-term Strategies**")
-            st.markdown("""
-            1. 🌿 Establish supplier grading system
-            2. 🌿 Diversify supply chain layout
-            3. 🌿 Conduct regular ESG audits
-            4. 🌿 Transparency commitment
-            """)
-    
-    # PDF report download (common to all companies)
-    st.markdown("---")
-    st.subheader("📥 Generate and Download Compliance Report")
-    
-    st.info("💡 Click the button below to generate a detailed ESG compliance report in PDF format, which can be used for internal risk control or to present to clients.")
-    
-    col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
-    
-    with col_btn2:
-        if st.button("📄 Generate PDF Compliance Report", type="primary", use_container_width=True):
-            try:
-                from utils.pdf_generator import generate_pdf_report
-                
-                with st.spinner('Generating PDF report...'):
-                    pdf_buffer = generate_pdf_report(data)
-                
-                st.download_button(
-                    label="⬇️ Download PDF Report",
-                    data=pdf_buffer,
-                    file_name=f"{selected_company.replace(' ', '_')}_ESG_Report.pdf",
-                    mime="application/pdf",
-                    use_container_width=True
-                )
-                
-                st.success("✅ Report generated successfully! Click the button above to download")
-                
-            except ImportError:
-                st.warning("PDF generation module not found. Please ensure `utils/pdf_generator.py` exists")
-            except Exception as e:
-                st.error(f"Error generating PDF: {str(e)}")
-
-# ========== Tab 3: B2C Product Traceability ==========
-with tab3:
-    st.header("📱 B2C Traceable Trust Label")
-    
-    st.markdown("""
-    This module demonstrates GreenLink's **Innovation Point 3**: B2B2C Value Closed Loop.
-    Convert B-side supply chain compliance into C-side consumer-perceptible "trust labels".
-    """)
-    
-    st.markdown("---")
-    
-    if is_cofco:
-        # COFCO perspective: show terminal product
-        st.info("💡 **Demo Scenario**: Consumers purchase Fortune edible oil in the supermarket, scan the 'GreenLink Certified' QR code on the bottle to view complete product traceability information.")
-        
-        col1, col2 = st.columns([1, 2])
-        
-        with col1:
-            st.subheader("🏺 Physical Demo Prop")
-            
-            st.markdown("""
-            **Product**: Fortune Edible Oil (5L)
-            
-            **Features**:
-            - ✅ Labeled with "GreenLink Certified" tag
-            - ✅ Printed with QR code
-            - ✅ Marked "Sustainable Sourcing"
-            """)
-            
-            # Generate QR code
-            try:
-                import qrcode
-                from io import BytesIO
-                
-                qr_url = "https://xikai0906.github.io/green-link-demo/"
-                
-                qr = qrcode.QRCode(
-                    version=1,
-                    error_correction=qrcode.constants.ERROR_CORRECT_L,
-                    box_size=10,
-                    border=4,
-                )
-                qr.add_data(qr_url)
-                qr.make(fit=True)
-                
-                img = qr.make_image(fill_color="green", back_color="white")
-                
-                buf = BytesIO()
-                img.save(buf, format='PNG')
-                buf.seek(0)
-                
-                st.image(buf, caption="Scan to view product traceability", width=250)
-                
-                st.caption(f"🔗 Link: {qr_url}")
-                
-            except ImportError:
-                st.warning("qrcode library required: `pip install qrcode`")
-                st.markdown("```\n[QR Code Placeholder]\nScan to view traceability information\n```")
-        
-        with col2:
-            st.subheader("📲 Consumer Mobile Preview")
-            
-            st.markdown("""
-            <div style="border: 3px solid #333; border-radius: 20px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                <h2 style="text-align: center; margin-bottom: 20px;">🌿 The Green Journey of a Bottle of Oil</h2>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("---")
-            
-            # Display supply chain traceability
-            supply_chain = data.get('supply_chain', {})
-            upstream = supply_chain.get('upstream', {})
-            suppliers = upstream.get('suppliers', [])
-            
-            # Raw material origin
-            with st.container():
-                st.markdown("### 🌍 Raw Material Origin")
-                
-                if suppliers:
-                    for idx, supplier in enumerate(suppliers[:2], 1):  # Show first 2 suppliers
-                        col_info1, col_info2 = st.columns([1, 1])
-                        
-                        with col_info1:
-                            st.write(f"**Supplier {idx}**")
-                            st.write(f"📍 {supplier.get('country', 'N/A')}")
-                            st.write(f"🏭 {supplier.get('name', 'N/A')}")
-                        
-                        with col_info2:
-                            st.write("**Risk Assessment**")
-                            risk_status = supplier.get('risk_status', '')
-                            if 'Low' in risk_status:
-                                st.success(f"✅ {risk_status}")
-                            elif 'High' in risk_status:
-                                st.warning(f"⚠️ {risk_status}")
-                            else:
-                                st.info(risk_status)
-                        
-                        st.markdown("---")
-            
-            # Processing factory
-            with st.container():
-                st.markdown("### 🏭 Processing Factory")
-                
-                st.write(f"**Manufacturer**: {data.get('company', 'N/A')}")
-                st.write(f"**Factory Location**: 📍 {data.get('headquarters', 'N/A')}")
-                
-                st.success("""
-                **Quality Certifications**:
-                - ✅ ISO 22000 Food Safety Management
-                - ✅ HACCP Hazard Analysis
-                - ✅ GreenLink ESG Certification
-                """)
-            
-            st.markdown("---")
-            
-            # Sustainable certification
-            with st.container():
-                st.markdown("### 📋 Sustainable Certifications")
-                
-                st.write(f"✅ GreenLink ESG Environmental Risk Assessment: {data['environment']['risk_level']} ({data['environment']['risk_score']} points)")
-                st.write(f"✅ GreenLink ESG Social Risk Assessment: {data['social']['risk_level']} ({data['social']['risk_score']} points)")
-                st.write("✅ Supply Chain Transparency Certification")
-            
-            st.markdown("---")
-            
-            # Thank you message
-            st.markdown("""
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 12px; text-align: center; color: white;">
-                <h3>❤️ Thank You for Your Choice</h3>
-                <p>Every purchase of a GreenLink certified product is support for sustainable development!</p>
-                <p><small>Powered by GreenLink Technology | Based on Satellite Remote Sensing and AI Analysis</small></p>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    else:
-        # Upstream supplier perspective: show B2B value
-        st.info(f"💡 As an upstream supplier, {data.get('company', 'Supplier')} can enhance brand value through GreenLink certification and gain trust from downstream customers.")
+        st.info("💡 Core Enterprise Perspective: Monitor how upstream risks transmit to itself and the market")
+        st.markdown("""
+        <div style="display: flex; justify-content: space-around; align-items: stretch; background: #ffffff; padding: 20px; border-radius: 10px; border: 1px dashed #c0e0c0; margin-bottom: 20px;">
+            <div style="flex:1;" class="chain-box"><div style="border: 2px solid #FF3333; color: #FF3333; padding: 10px; border-radius: 5px;">FGV Holdings<br><small>Upstream/High Risk</small></div></div>
+            <div class="arrow">➜</div>
+            <div style="flex:1;" class="chain-box"><div style="border: 2px solid #FFCC00; color: #FFCC00; padding: 10px; border-radius: 5px;">COFCO Group<br><small>Core Enterprise</small></div></div>
+            <div class="arrow">➜</div>
+            <div style="flex:1;" class="chain-box"><div style="border: 2px solid #00F2FF; color: #00F2FF; padding: 10px; border-radius: 5px;">EU/US Markets<br><small>Compliance Barriers</small></div></div>
+        </div>
+        """, unsafe_allow_html=True)
         
         col1, col2 = st.columns(2)
-        
         with col1:
-            st.markdown("### 🏆 B2B Value")
-            
-            b2b_value = data.get('b2b_value', {})
-            
-            for_buyers = b2b_value.get('for_buyers', [])
-            if for_buyers:
-                st.markdown("**Value for Buyers**")
-                for value in for_buyers:
-                    st.write(f"✅ {value}")
-            
-            for_investors = b2b_value.get('for_investors', [])
-            if for_investors:
-                st.markdown("**Value for Investors**")
-                for value in for_investors:
-                    st.write(f"📊 {value}")
-        
+            st.markdown("### 🚨 Upstream Risk Sources")
+            suppliers = data.get('supply_chain', {}).get('upstream', {}).get('suppliers', [])
+            for s in suppliers:
+                is_high = "High" in s.get('risk_status', '') or "75" in s.get('risk_status', '')
+                status_html = f'<span style="color: #FF3333;">[High Risk]</span>' if is_high else f'<span style="color: #00FF41;">[Low Risk]</span>'
+                st.markdown(f"""<div class="tech-card" style="padding: 12px; margin-bottom: 10px;"><div style="font-size: 1rem; font-weight: bold;">{s['name']}</div><div style="font-size: 0.9rem; margin-top:5px;">Status: {status_html} {s.get('risk_status','')}</div></div>""", unsafe_allow_html=True)
         with col2:
-            st.markdown("### 👥 B2C Value")
-            
-            b2c_value = data.get('b2c_value', {})
-            
-            st.write(f"**Trust Label**: {b2c_value.get('consumer_trust_label', 'GreenLink ESG Certification')}")
-            st.write(f"**Traceability Method**: {b2c_value.get('qr_code_traceability', 'QR Code Scanning')}")
-            
-            messaging = b2c_value.get('messaging', '')
-            if messaging:
-                st.info(messaging)
-
-# Sidebar bottom information
-st.sidebar.markdown("---")
-st.sidebar.subheader("📚 About GreenLink")
-
-st.sidebar.markdown("""
-**🎯 Three Innovation Points**
-
-1️⃣ **Alternative Data + AI Analysis**
-- 🛰️ Sentinel-2 Satellite Remote Sensing
-- 📰 Public Opinion Data Mining
-- 🤖 Python Automated Analysis
-
-2️⃣ **E/S Separate Scoring**
-- Environment (E): Satellite Verification
-- Social (S): Public Opinion Analysis
-- Accurately locate risk sources
-
-3️⃣ **B2B2C Value Closed Loop**
-- B-side: Risk Early Warning
-- B-side: Compliance Report
-- C-side: Trust Label
-""")
-
-st.sidebar.markdown("---")
-
-# GreenLink advantage display
-if 'greenlink_advantage' in data:
-    advantage = data['greenlink_advantage']
-    
-    with st.sidebar.expander("🌟 GreenLink Advantages"):
-        vs_traditional = advantage.get('vs_traditional_rating', [])
-        for item in vs_traditional:
-            st.write(f"- {item}")
+            st.markdown("### 🛡️ Blocking Strategy Recommendations")
+            st.markdown("""<div class="tech-card"><ul style="margin: 0; padding-left: 20px; color: #1a3c1a;"><li style="margin-bottom: 10px;"><strong>Dynamic Adjustment:</strong> Immediately reduce FGV procurement share to below 10%.</li><li style="margin-bottom: 10px;"><strong>Alternatives:</strong> Activate IOI Corporation (low risk) backup channel.</li><li><strong>Physical Isolation:</strong> Establish independent warehousing for U.S. CBP requirements.</li></ul></div>""", unsafe_allow_html=True)
+    else:
+        st.info(f"💡 Supplier Perspective: How your ESG risks lead to downstream customer loss")
+        my_risk_color = "#FF3333" if total_score > 50 else "#00FF41"
+        st.markdown(f"""
+        <div style="display: flex; justify-content: space-around; align-items: stretch; background: #ffffff; padding: 20px; border-radius: 10px; border: 1px dashed #c0e0c0; margin-bottom: 20px;">
+            <div style="flex:1;" class="chain-box"><div style="border: 2px solid {my_risk_color}; color: {my_risk_color}; padding: 10px; border-radius: 5px;">{data.get('company')}<br><small>You (Supplier)</small></div></div>
+            <div class="arrow">➜</div>
+            <div style="flex:1;" class="chain-box"><div style="border: 2px solid #FFCC00; color: #FFCC00; padding: 10px; border-radius: 5px;">Core Processor<br><small>Buyer</small></div></div>
+            <div class="arrow">➜</div>
+            <div style="flex:1;" class="chain-box"><div style="border: 2px solid #FF0000; color: #FF0000; padding: 10px; border-radius: 5px; background: rgba(255,0,0,0.05);">Market Ban<br><small>CBP/EUDR Interception</small></div></div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        real_time = advantage.get('real_time_monitoring', [])
-        if real_time:
-            st.markdown("**Real-time Monitoring**:")
-            for item in real_time:
-                st.write(f"- {item}")
+        c1, c2 = st.columns(2)
+        with c1:
+            st.markdown("### 📉 Business Impact Forecast")
+            st.markdown(f"""<div class="tech-card" style="border-left-color: #FF3333;"><div style="margin-bottom:10px;"><strong>⚠️ Major Customer Loss Risk:</strong></div><div style="font-size:2rem; color:#FF3333; font-weight:bold;">HIGH</div><p style="color:#666; font-size:0.9rem;">Due to your high social risk score ({soc_score}), downstream customers face compliance pressure, expected to cut 70% of orders.</p></div>""", unsafe_allow_html=True)
+        with c2:
+            st.markdown("### ✅ Remediation Recommendations (To-Do)")
+            st.markdown("""<div class="tech-card" style="border-left-color: #00FF41;"><ul style="margin: 0; padding-left: 20px; color: #1a3c1a;"><li style="margin-bottom: 10px;"><strong>Immediate Action:</strong> Submit third-party audit report for CBP WRO.</li><li><strong>Transparency:</strong> Upload labor compliance certificates.</li></ul></div>""", unsafe_allow_html=True)
 
-st.sidebar.info("""
-**💻 Tech Stack**
-- Streamlit: Web Application Framework
-- Python: Data Analysis
-- Sentinel-2: Satellite Data
-- ReportLab: PDF Generation
-- GitHub Pages: B2C Deployment
+with tab3:
+    st.markdown("## 💰 Green Finance & Risk Pricing")
+    fin_col1, fin_col2 = st.columns([1, 1])
+    
+    with fin_col1:
+        st.markdown("### 🏦 ESG-Linked Loan Simulator")
+        st.markdown("""<div class="tech-card" style="border-left-color: #00F2FF;"><strong>Algorithm Logic:</strong> Based on the company's real-time ESG score, calculate the green loan interest rate discount (Basis Points) available.</div>""", unsafe_allow_html=True)
+        
+        loan_amount = st.number_input("Loan Amount (10k RMB)", min_value=100, value=5000, step=100)
+        
+        if 'show_loan_result' not in st.session_state:
+            st.session_state.show_loan_result = False
+        
+        if st.button("🚀 Start AI Rating Calculation (START RATING)", type="primary", use_container_width=True):
+            st.session_state.show_loan_result = True
+           
+        if st.session_state.show_loan_result:
+            base_rate = 4.35
+            discount_bp = 50 if total_score <= 30 else (20 if total_score <= 50 else 0)
+            rating_color = "#00FF41" if total_score <= 30 else ("#ADFF2F" if total_score <= 50 else "#FFA500")
+            rating_label = "🌿 Deep Green Enterprise" if total_score <= 30 else ("🍃 Light Green Enterprise" if total_score <= 50 else "🍂 Brown Enterprise")
+            final_rate = base_rate - (discount_bp / 100)
+            annual_saving = loan_amount * (discount_bp / 10000)
+            
+            st.markdown("---")
+            st.markdown(f'<div style="font-size: 1.1rem; font-weight: bold; color: {rating_color}; margin: 10px 0;">Rating Result: {rating_label}</div>', unsafe_allow_html=True)
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Base Rate", f"{base_rate}%")
+            c2.metric("ESG Discount", f"-{discount_bp} bp")
+            c3.metric("Effective Rate", f"{final_rate:.2f}%")
+            st.markdown(f"""<div style="background: #f8fff8; border: 1px solid #00b140; padding: 15px; border-radius: 6px; text-align: center; margin-top: 15px;"><span style="color: #006633; font-size: 0.9rem;">Estimated Annual Interest Savings</span><br><span style="font-size: 1.8rem; color: #00b140; font-weight: bold; font-family: monospace;">¥ {annual_saving:,.0f}</span></div>""", unsafe_allow_html=True)
+        else:
+            st.info("💡 Enter loan amount and click the button above to start calculation")
+       
+    with fin_col2:
+        st.markdown("### 📉 Financial Risk Quantification")
+        if total_score > 60:
+            potential_loss = loan_amount * 0.15
+            st.error("⚠️ Extremely High Risk Exposure")
+            st.markdown("""<div class="tech-card" style="border-left-color: #FF3333;"><p style="color: #FF3333 !important;"><strong>Main Risk Sources:</strong></p><ul style="color: #1a3c1a;"><li>🇪🇺 <strong>EU EUDR Fine:</strong> 4% of revenue</li><li>🇺🇸 <strong>Goods Detention Cost:</strong> ~2M USD</li></ul></div>""", unsafe_allow_html=True)
+            st.metric("Potential Financial Loss Estimate", f"¥ {potential_loss/10000:,.1f} Billion", delta="-15% Revenue", delta_color="inverse")
+        else:
+            st.success("✅ Financial Risk Controllable")
+            st.metric("Green Premium (Greenium)", "+ 2.5%", "Financing Cost Advantage")
+    st.markdown("---")
+    st.subheader("⛓️ Supply Chain Finance Credit Model")
+    scf_df = pd.DataFrame({"Supplier": ["FGV", "IOI", "Sime Darby", "Wilmar"], "ESG Risk Score": [75, 25, 30, 40], "Base Credit (10k)": [1000, 1000, 1000, 1000]})
+    scf_df["Adjustment Factor"] = scf_df["ESG Risk Score"].apply(lambda x: 0.5 if x > 60 else (1.2 if x < 30 else 1.0))
+    scf_df["Dynamic Credit (10k)"] = (scf_df["Base Credit (10k)"] * scf_df["Adjustment Factor"]).astype(int)
+    st.dataframe(scf_df, use_container_width=True, hide_index=True)
 
-**📊 Data Update**
-Weekly automatic update
-""")
+with tab4:
+    st.markdown("### 📱 Product Digital Twin & Trust Traceability (B2C)")
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        st.markdown(f"""<div style="background: #FFF; padding: 15px; border-radius: 10px; display: inline-block;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://xikai0906.github.io/green-link-demo/" width="100%" /></div>""", unsafe_allow_html=True)
+        st.markdown('<p style="text-align:center; margin-top:10px; color:#00F2FF;">SCAN TO VERIFY</p>', unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div class="product-trace-card">
+            <h2 style="color: #1a3c1a; margin-bottom: 20px;">🌿 Fortune Edible Oil <span style="font-size:0.6em; color:#00FF41; border:1px solid #00FF41; padding:2px 8px; border-radius:4px;">VERIFIED</span></h2>
+            <div style="display: flex; justify-content: space-between; text-align: left; margin-bottom: 20px;">
+                <div style="width: 30%;"><div style="color: #666; font-size: 0.8rem;">CARBON FOOTPRINT</div><div style="color: #00F2FF; font-size: 1.2rem; font-weight: bold;">1.2kg</div><div style="color: #555; font-size: 0.7rem;">CO2e / Bottle</div></div>
+                <div style="width: 30%;"><div style="color: #666; font-size: 0.8rem;">ORIGIN</div><div style="color: #00F2FF; font-size: 1.2rem; font-weight: bold;">Johor, MY</div><div style="color: #555; font-size: 0.7rem;">Satellite Checked</div></div>
+                <div style="width: 30%;"><div style="color: #666; font-size: 0.8rem;">LABOR</div><div style="color: #00F2FF; font-size: 1.2rem; font-weight: bold;">ILO Compliant</div><div style="color: #555; font-size: 0.7rem;">Audit Passed</div></div>
+            </div>
+            <div style="background: rgba(0, 255, 65, 0.1); border: 1px dashed #00FF41; padding: 10px; border-radius: 8px;"><p style="color: #00FF41; margin: 0; font-size: 0.9rem;">✅ <strong>Blockchain Evidence Hash:</strong> 0x7f83...9a2b<br>This product's supply chain fully complies with GreenLink sustainability standards</p></div>
+        </div>
+        """, unsafe_allow_html=True)
+    st.markdown("---")
+    with st.expander("📜 Underlying Compliance Protocols & International Standards (COMPLIANCE PROTOCOLS)", expanded=True):
+        c1, c2, c3 = st.columns(3)
+        with c1: st.markdown("""<div class="protocol-box"><div class="protocol-title">ISO 14067 (Carbon Footprint)</div><div style="color:#1a3c1a; font-size:0.85rem;">• <strong>Standard:</strong> LCA Method<br>• <strong>Advantage:</strong> 68% Carbon Reduction</div></div>""", unsafe_allow_html=True)
+        with c2: st.markdown("""<div class="protocol-box"><div class="protocol-title">EUDR (Zero Deforestation)</div><div style="color:#1a3c1a; font-size:0.85rem;">• <strong>Red Line:</strong> No deforestation after 2020<br>• <strong>Verification:</strong> Sentinel-2 Satellite</div></div>""", unsafe_allow_html=True)
+        with c3: st.markdown("""<div class="protocol-box"><div class="protocol-title">ILO (Labor Conventions)</div><div style="color:#1a3c1a; font-size:0.85rem;">• <strong>Focus:</strong> Avoid U.S. CBP Ban<br>• <strong>Audit:</strong> SA8000 Certification</div></div>""", unsafe_allow_html=True)
 
 st.sidebar.markdown("---")
-st.sidebar.caption("© 2024 GreenLink | Innovation and Entrepreneurship Competition DEMO")
+st.sidebar.markdown("""<div style="font-size: 0.8rem; color: #666;">POWERED BY <strong style="color: #00b140;">GREENLINK TECH</strong><br>v3.7.0 (White-Green Layout)</div>""", unsafe_allow_html=True)
