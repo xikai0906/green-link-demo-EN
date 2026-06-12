@@ -1,160 +1,327 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GreenLink Certification - Product Traceability</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-       
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-       
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-       
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-       
-        .logo {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-       
-        h1 {
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-       
-        .subtitle {
-            color: #7f8c8d;
-            font-size: 14px;
-        }
-       
-        .section {
-            margin: 25px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            border-left: 4px solid #27ae60;
-        }
-       
-        .section h2 {
-            color: #27ae60;
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-       
-        .info-item {
-            margin: 10px 0;
-        }
-       
-        .info-label {
-            font-weight: bold;
-            color: #34495e;
-            margin-bottom: 5px;
-        }
-       
-        .badge {
-            display: inline-block;
-            background: #27ae60;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin: 5px 5px 5px 0;
-        }
-       
-        .thank-you {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 20px;
-        }
-       
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ecf0f1;
-            color: #7f8c8d;
-            font-size: 12px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🌿</div>
-            <h1>GreenLink Certification</h1>
-            <p class="subtitle">The Green Journey of a Bottle of Oil</p>
-        </div>
-       
-        <div class="section">
-            <h2>🌍 Raw Material Origin</h2>
-            <div class="info-item">
-                <div class="info-label">Plantation Location</div>
-                <div>FGV Plantation, Pahang State, Malaysia</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Satellite Verification Results</div>
-                <span class="badge">✅ Sentinel-2 Satellite Verified</span>
-                <span class="badge">✅ No Illegal Deforestation</span>
-                <span class="badge">✅ Compliant with EU EUDR Regulations</span>
-            </div>
-        </div>
-       
-        <div class="section">
-            <h2>🏭 Processing Factory</h2>
-            <div class="info-item">
-                <div class="info-label">Manufacturer</div>
-                <div>COFCO Group - Fortune Brand</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Quality Certifications</div>
-                <span class="badge">ISO 22000</span>
-                <span class="badge">HACCP</span>
-                <span class="badge">GreenLink Certification</span>
-            </div>
-        </div>
-       
-        <div class="section">
-            <h2>📋 Sustainable Certifications</h2>
-            <div class="info-item">
-                ✅ GreenLink ESG Risk Assessment: Low Environmental Risk<br>
-                ✅ Supply Chain Transparency Certification<br>
-                ✅ Zero Deforestation Commitment Verified
-            </div>
-        </div>
-       
-        <div class="thank-you">
-            <h2>❤️ Thank You for Your Choice</h2>
-            <p>Every purchase of a GreenLink certified product is support for sustainable development!</p>
-        </div>
-       
-        <div class="footer">
-            <p>Powered by GreenLink</p>
-            <p>Supply Chain Traceability Powered by Satellite Remote Sensing and AI Technology</p>
+#!/usr/bin/env python
+"""
+GreenLink B2C Product Traceability Demo
+Standalone Streamlit application for consumer-facing product verification.
+"""
+
+import streamlit as st
+import qrcode
+from io import BytesIO
+from PIL import Image
+import os
+
+# Page configuration
+st.set_page_config(
+    page_title="GreenLink | Product Traceability",
+    page_icon="🌿",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
+# Custom CSS - Clean consumer-friendly green theme
+st.markdown("""
+<style>
+    .stApp {
+        background: linear-gradient(135deg, #f0fff0 0%, #e8f5e9 100%);
+    }
+    
+    .main-container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 177, 64, 0.15);
+        border: 2px solid #00b140;
+        margin-bottom: 2rem;
+    }
+    
+    .product-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .product-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1a3c1a;
+        margin-bottom: 0.5rem;
+    }
+    
+    .verified-badge {
+        display: inline-block;
+        background: #00b140;
+        color: white;
+        padding: 6px 18px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    
+    .trace-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .trace-item {
+        background: #f8fff8;
+        border: 1px solid #d0e8d0;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .trace-label {
+        font-size: 0.75rem;
+        color: #666;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .trace-value {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #00b140;
+    }
+    
+    .trace-sub {
+        font-size: 0.7rem;
+        color: #888;
+    }
+    
+    .blockchain-box {
+        background: #f0fff0;
+        border: 2px dashed #00b140;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 1.5rem 0;
+        text-align: center;
+    }
+    
+    .compliance-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .compliance-card {
+        background: white;
+        border: 1px solid #d0e8d0;
+        border-radius: 12px;
+        padding: 1rem;
+    }
+    
+    .compliance-title {
+        color: #00b140;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .section-title {
+        color: #1a3c1a;
+        font-weight: 700;
+        margin: 2rem 0 1rem 0;
+        font-size: 1.3rem;
+    }
+    
+    .qr-container {
+        text-align: center;
+        padding: 1rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 177, 64, 0.1);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ==================== HEADER ====================
+st.markdown("""
+<div style="text-align: center; margin-bottom: 2rem;">
+    <div style="font-size: 3rem; margin-bottom: 0.5rem;">🌿</div>
+    <h1 style="color: #00b140; font-weight: 900; margin: 0;">GreenLink</h1>
+    <p style="color: #666; font-size: 1.1rem; margin-top: 0.3rem;">Product Traceability & Trust Verification</p>
+</div>
+""", unsafe_allow_html=True)
+
+# ==================== PRODUCT CARD ====================
+st.markdown('<div class="product-card">', unsafe_allow_html=True)
+
+# Product Header
+st.markdown("""
+<div class="product-header">
+    <div style="font-size: 2.8rem; margin-bottom: 0.8rem;">🫒</div>
+    <div class="product-title">Fortune Edible Oil</div>
+    <div class="verified-badge">✅ VERIFIED ON GREENLINK</div>
+    <p style="color: #666; margin-top: 0.8rem; font-size: 0.95rem;">
+        100% traceable from plantation to your kitchen
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+# Traceability Grid
+st.markdown('<div class="trace-grid">', unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+    <div class="trace-item">
+        <div class="trace-label">Carbon Footprint</div>
+        <div class="trace-value">1.2 kg</div>
+        <div class="trace-sub">CO₂e per bottle</div>
+        <div style="margin-top: 6px; font-size: 0.75rem; color: #00b140;">68% lower than average</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="trace-item">
+        <div class="trace-label">Origin</div>
+        <div class="trace-value">Johor, Malaysia</div>
+        <div class="trace-sub">FGV Plantation</div>
+        <div style="margin-top: 6px; font-size: 0.75rem; color: #00b140;">Satellite Verified</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+    <div class="trace-item">
+        <div class="trace-label">Labor Standards</div>
+        <div class="trace-value">ILO Compliant</div>
+        <div class="trace-sub">SA8000 Certified</div>
+        <div style="margin-top: 6px; font-size: 0.75rem; color: #00b140;">Audit Passed ✓</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Blockchain Evidence
+st.markdown("""
+<div class="blockchain-box">
+    <div style="color: #00b140; font-weight: bold; margin-bottom: 6px;">🔗 Blockchain Evidence Hash</div>
+    <div style="font-family: monospace; font-size: 0.95rem; color: #1a3c1a; word-break: break-all;">
+        0x7f83a9c2e4b1d5f8a3c7e9b2d4f6a8c1e3b5d7f9a2c4e6b8d0f2a4c6e8b0d2f4a6
+    </div>
+    <div style="margin-top: 8px; font-size: 0.8rem; color: #666;">
+        This product’s entire supply chain is immutably recorded on GreenLink’s sustainability ledger.
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)  # Close product card
+
+# ==================== QR CODE SECTION ====================
+st.markdown('<div class="section-title">📱 Scan to Verify</div>', unsafe_allow_html=True)
+
+col_qr, col_info = st.columns([1, 1.3])
+
+with col_qr:
+    st.markdown('<div class="qr-container">', unsafe_allow_html=True)
+    
+    # Generate QR code dynamically
+    qr_url = "https://greenlink-demo.streamlit.app/b2c"  # You can change this to your deployed URL
+    
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=8,
+        border=2,
+    )
+    qr.add_data(qr_url)
+    qr.make(fit=True)
+    
+    img = qr.make_image(fill_color="#00b140", back_color="white")
+    
+    # Convert to bytes for Streamlit
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    
+    st.image(buf, width=220, caption="Scan to view full traceability")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with col_info:
+    st.markdown("""
+    **How to verify:**
+    1. Open your phone camera or any QR scanner app
+    2. Scan the code above
+    3. View the complete journey of this product from plantation to shelf
+    
+    **What you will see:**
+    - Satellite-verified origin
+    - Real-time ESG risk status
+    - Carbon footprint calculation
+    - Labor compliance certificates
+    - Blockchain transaction records
+    """)
+
+# ==================== COMPLIANCE PROTOCOLS ====================
+st.markdown('<div class="section-title">📜 International Compliance Standards</div>', unsafe_allow_html=True)
+
+col_a, col_b, col_c = st.columns(3)
+
+with col_a:
+    st.markdown("""
+    <div class="compliance-card">
+        <div class="compliance-title">🌍 ISO 14067</div>
+        <div style="font-size: 0.9rem; color: #444; line-height: 1.5;">
+            <strong>Carbon Footprint</strong><br>
+            • Life Cycle Assessment (LCA)<br>
+            • 68% carbon reduction achieved<br>
+            • Verified by third-party auditor
         </div>
     </div>
-</body>
-</html>
+    """, unsafe_allow_html=True)
+
+with col_b:
+    st.markdown("""
+    <div class="compliance-card">
+        <div class="compliance-title">🛰️ EUDR</div>
+        <div style="font-size: 0.9rem; color: #444; line-height: 1.5;">
+            <strong>Zero Deforestation</strong><br>
+            • No deforestation after 2020<br>
+            • Sentinel-2 satellite monitoring<br>
+            • Full traceability to plot level
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_c:
+    st.markdown("""
+    <div class="compliance-card">
+        <div class="compliance-title">👷 ILO & SA8000</div>
+        <div style="font-size: 0.9rem; color: #444; line-height: 1.5;">
+            <strong>Labor Rights</strong><br>
+            • No forced or child labor<br>
+            • Fair wages & working conditions<br>
+            • Independent social audit passed
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ==================== FOOTER ====================
+st.markdown("---")
+st.markdown("""
+<div style="text-align: center; color: #666; font-size: 0.85rem; padding: 1rem 0;">
+    Powered by <strong style="color: #00b140;">GreenLink</strong> — Satellite + AI + Blockchain<br>
+    Making every purchase a vote for sustainability 🌱
+</div>
+""", unsafe_allow_html=True)
+
+# Optional: Add a small "Verify Now" button that simulates blockchain check
+if st.button("🔍 Simulate Blockchain Verification", type="primary", use_container_width=True):
+    with st.spinner("Verifying on GreenLink ledger..."):
+        import time
+        time.sleep(1.2)
+    st.success("✅ Verification Successful! This product is fully compliant with GreenLink sustainability standards.")
+    st.balloons()
