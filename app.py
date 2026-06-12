@@ -474,7 +474,7 @@ with tab4:
     st.markdown("### 📱 Product Digital Twin & Trust Traceability (B2C)")
     col1, col2 = st.columns([1, 2])
     with col1:
-        st.markdown(f"""<div style="background: #FFF; padding: 15px; border-radius: 10px; display: inline-block;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://xikai0906.github.io/green-link-demo/" width="100%" /></div>""", unsafe_allow_html=True)
+        st.markdown(f"""<div style="background: #FFF; padding: 15px; border-radius: 10px; display: inline-block;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://xikai0906.github.io/green-link-demo-EN/" width="100%" /></div>""", unsafe_allow_html=True)
         st.markdown('<p style="text-align:center; margin-top:10px; color:#00F2FF;">SCAN TO VERIFY</p>', unsafe_allow_html=True)
     with col2:
         st.markdown("""
