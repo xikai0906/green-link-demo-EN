@@ -213,19 +213,6 @@
             background: #008f33;
             transform: translateY(-2px);
         }
-        
-        .demo-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #f0fff0;
-            color: #00b140;
-            padding: 0.6rem 1.4rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 1rem;
-        }
     </style>
 </head>
 <body>
@@ -242,13 +229,6 @@
                 Real-time supply chain risk monitoring using satellite remote sensing + AI sentiment analysis.
                 Built for EUDR, UFLPA, and sustainable finance compliance.
             </p>
-            
-            <div style="margin-top: 2.5rem;">
-                <a href="https://github.com/xikai0906/green-link-demo" class="btn" style="background: white; color: #00b140; margin-right: 1rem;">
-                    View on GitHub
-                </a>
-                <a href="../b2c_traceability.py" class="btn">Try B2C Demo</a>
-            </div>
         </div>
     </header>
 
@@ -355,14 +335,6 @@
                     </tr>
                 </tbody>
             </table>
-            
-            <p><strong>Main sections in each JSON:</strong></p>
-            <ul style="padding-left: 1.5rem; line-height: 2;">
-                <li><code>company_info</code> — Basic company metadata</li>
-                <li><code>environment</code> — Risk score, satellite analysis, compliance status, metrics</li>
-                <li><code>social</code> — Risk score, key events, traditional ratings, root causes</li>
-                <li><code>supply_chain</code> — Upstream/midstream/downstream structure + risk scenarios</li>
-            </ul>
         </section>
 
         <!-- Tech Stack -->
@@ -379,49 +351,54 @@
                 <div class="tech-item">🛰️ Sentinel-2 API</div>
                 <div class="tech-item">🤖 AI Sentiment Analysis</div>
             </div>
-            
-            <div style="margin-top: 2rem;">
-                <h4 style="margin-bottom: 0.8rem;">Deployment Options</h4>
-                <div class="tech-stack">
-                    <div class="tech-item">Streamlit Cloud (Recommended)</div>
-                    <div class="tech-item">Docker</div>
-                    <div class="tech-item">Heroku</div>
-                    <div class="tech-item">GitHub Pages (B2C)</div>
-                </div>
-            </div>
         </section>
 
         <!-- Live Demo -->
         <section id="demo" class="section">
-            <h2 class="section-title">Live Demos</h2>
+            <h2 class="section-title">Live Demo &amp; Resources</h2>
             
             <div class="grid">
                 <div class="card">
                     <h3>🖥️ Main ESG Dashboard</h3>
                     <p>Full interactive demo with risk monitoring, supply chain analysis, green finance simulator, and B2C traceability.</p>
-                    <a href="../app.py" class="demo-link">▶ Run Streamlit App</a>
                 </div>
                 
                 <div class="card">
-                    <h3>📱 B2C Traceability Page</h3>
-                    <p>Standalone consumer-facing product verification experience with dynamic QR code.</p>
-                    <a href="../b2c_traceability.py" class="demo-link">▶ Open B2C Demo</a>
+                    <h3>📱 B2C Traceability</h3>
+                    <p>Standalone consumer-facing product verification experience with dynamic QR code and blockchain evidence.</p>
                 </div>
             </div>
-        </section>
 
-        <!-- Quick Start -->
-        <section class="section">
-            <h2 class="section-title">Quick Start</h2>
-            
-            <div style="background: white; border: 1px solid #d0e8d0; border-radius: 16px; padding: 2rem;">
-                <pre style="background: #f8fff8; padding: 1.5rem; border-radius: 12px; overflow-x: auto; font-size: 0.95rem;"><code>git clone https://github.com/xikai0906/green-link-demo.git
-cd green-link-demo-en
+            <!-- 更新后的两个按钮 -->
+            <div style="margin-top: 2.5rem; text-align: center;">
+                <a href="https://github.com/xikai0906/green-link-demo-EN" 
+                   target="_blank"
+                   style="display: inline-block; 
+                          background: #00b140; 
+                          color: white; 
+                          padding: 14px 32px; 
+                          border-radius: 50px; 
+                          text-decoration: none; 
+                          font-weight: 600; 
+                          font-size: 1rem;
+                          margin: 8px;">
+                    📁 View Full Project on GitHub
+                </a>
 
-pip install -r requirements.txt
-streamlit run app.py</code></pre>
-                
-                <p style="margin-top: 1rem;"><strong>Then open:</strong> <code>http://localhost:8501</code></p>
+                <a href="https://github.com/xikai0906/green-link-demo-EN/blob/main/b2c_traceability.py" 
+                   target="_blank"
+                   style="display: inline-block; 
+                          background: #f0fff0; 
+                          color: #00b140; 
+                          padding: 14px 32px; 
+                          border-radius: 50px; 
+                          text-decoration: none; 
+                          font-weight: 600; 
+                          font-size: 1rem;
+                          border: 2px solid #00b140;
+                          margin: 8px;">
+                    📱 View B2C Demo Code
+                </a>
             </div>
         </section>
 
