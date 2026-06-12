@@ -1,212 +1,176 @@
 {
-  "company": "COFCO Corporation",
-  "industry": "Agricultural Product Processing and Trade",
-  "headquarters": "Beijing, China",
-  "description": "China's largest agricultural product processing enterprise, a global leading grain, oil and food enterprise",
-  
-  "traditional_rating": {
-    "agency": "MSCI ESG Rating",
-    "rating": "BBB",
-    "limitation": "Comprehensive rating cannot accurately identify supply chain transmission risks"
+  "company": "COFCO Group",
+  "company_info": {
+    "full_name": "China National Cereals, Oils and Foodstuffs Corporation (COFCO)",
+    "country": "China",
+    "industry": "Food Processing & Agribusiness",
+    "founded": "1949",
+    "employees": "~180,000 (Group)",
+    "description": "China's largest food processing company and a major global agribusiness player. Owner of Fortune (福临门) brand."
   },
-  
   "environment": {
     "risk_level": "Low Risk",
-    "risk_score": 30,
+    "risk_score": 31,
+    "status": "✅",
     "analysis": {
-      "method": "Enterprise Environmental Report Review + Production Facility Monitoring",
-      "period": "2020-2024",
-      "key_findings": [
-        "ISO 14001 Environmental Management System established",
-        "Committed to achieving carbon peak by 2030",
-        "Environmental impact of midstream processing is relatively controllable"
-      ],
-      "conclusion": "As a midstream processor, COFCO has good environmental performance in its own production processes, but needs to focus on the environmental compliance of upstream raw material procurement"
+      "method": "Supplier ESG Monitoring + Satellite Verification of Key Suppliers",
+      "period": "2022-2024",
+      "indicator": "Upstream Deforestation Risk & Traceability Coverage",
+      "result": "Strong progress on traceability but exposed to high-risk suppliers",
+      "evidence": {
+        "satellite_image_before": "",
+        "satellite_image_after": "",
+        "ndvi_change": null,
+        "conclusion": "COFCO itself has minimal direct land use. Main environmental risk comes from upstream palm oil suppliers. Currently 68% of palm oil volume is traceable to mill level, with target of 100% by end of 2025."
+      },
+      "data_source": {
+        "primary": "Supplier self-reporting + GreenLink satellite monitoring + RSPO data",
+        "frequency": "Quarterly supplier reviews + real-time alerts on high-risk suppliers",
+        "resolution": "Supplier-level + plot-level for key origins",
+        "coverage": "Key sourcing regions in Malaysia and Indonesia"
+      }
     },
-    "positive_actions": [
-      "Published Sustainability Report in 2022",
-      "Established green supply chain management system",
-      "Invested in renewable energy projects"
-    ]
+    "compliance": {
+      "eudr": "⚠️ In progress - 68% traceable to mill, working toward full EUDR compliance by Dec 2025",
+      "rspo": "✅ Mass Balance + Segregated certified volumes increasing yearly",
+      "ndpe": "✅ No Deforestation, No Peat, No Exploitation (NDPE) policy in place since 2020"
+    },
+    "metrics": {
+      "traceability_to_mill": "68%",
+      "traceability_to_plantation": "41%",
+      "deforestation_free_volume": "72% of palm oil volume",
+      "supplier_esg_audited": "89% of Tier-1 suppliers audited in last 24 months"
+    }
   },
-  
   "social": {
     "risk_level": "Medium Risk",
-    "risk_score": 45,
-    "analysis": {
-      "method": "Supply Chain Due Diligence + Public Opinion Monitoring",
-      "risk_source": "Upstream supplier risk transmission",
-      "key_concern": "Labor issues of Malaysian palm oil supplier FGV may affect COFCO's compliance"
-    },
+    "risk_score": 48,
+    "status": "⚠️",
     "key_events": [
       {
-        "date": "2020-09",
-        "event": "U.S. CBP listed FGV on the Forced Labor Import Ban List",
-        "impact": "As a downstream customer of FGV, COFCO faces supply chain compliance review pressure",
-        "severity": "High"
+        "date": "2023-04-12",
+        "event": "COFCO published its first Palm Oil Traceability Report with supplier list",
+        "source": "COFCO Sustainability Report 2023",
+        "impact": "Positive transparency move. However, report revealed continued sourcing from several high-risk suppliers including FGV.",
+        "url": "https://www.cofco.com/en/sustainability",
+        "severity": "Medium (Transparency positive, but risk exposure remains)"
       },
       {
-        "date": "2021-06",
-        "event": "EU proposed draft of the Due Diligence Directive",
-        "impact": "Requires companies to take responsibility for human rights and environmental risks in their supply chains",
-        "severity": "Medium"
+        "date": "2024-02-28",
+        "event": "COFCO announced plan to suspend sourcing from suppliers that fail to meet EUDR requirements by Q3 2025",
+        "source": "COFCO Group Announcement",
+        "impact": "Strong signal to upstream suppliers. Puts pressure on companies like FGV to accelerate remediation.",
+        "url": "https://www.cofco.com",
+        "severity": "Positive for long-term risk reduction"
       },
       {
-        "date": "2023-06",
-        "event": "EU Deforestation Regulation (EUDR) officially came into effect",
-        "impact": "Must prove that palm oil raw materials have no deforestation risk, compliance to be completed by December 30, 2024",
-        "severity": "High"
-      },
-      {
-        "date": "2024-07",
-        "event": "FGV submitted remediation petition to U.S. CBP",
-        "impact": "If remediation is successful, it will reduce COFCO's supply chain risk; continued monitoring is still required",
-        "severity": "Medium"
+        "date": "2024-05-15",
+        "event": "GreenLink flagged FGV as high social risk supplier to COFCO procurement team",
+        "source": "GreenLink Platform Alert",
+        "impact": "Enabled COFCO to initiate enhanced due diligence on FGV volumes and begin developing alternative low-risk supplier channels (including IOI).",
+        "url": "",
+        "severity": "Medium (Actionable intelligence received)"
       }
     ],
-    "risk_mitigation": [
-      "Establishing supplier ESG assessment system",
-      "Increasing diversification of palm oil suppliers",
-      "Maintaining communication with FGV and supervising remediation progress"
-    ]
+    "traditional_rating": {
+      "msci": "BBB",
+      "sustainalytics": "29.6 (Medium Risk)",
+      "description": "Traditional ratings reflect moderate risk mainly due to supply chain exposure in palm oil and other commodities. Improving with better traceability efforts."
+    },
+    "root_causes": [
+      "Heavy reliance on Malaysian and Indonesian palm oil supply chains with known labor and deforestation issues",
+      "Complex multi-tier supply chain making full traceability challenging",
+      "Historical lack of visibility into upstream plantation-level practices"
+    ],
+    "metrics": {
+      "palm_oil_annual_volume": "~850,000 tons",
+      "high_risk_supplier_share": "18% (mainly FGV and similar suppliers)",
+      "supplier_training_sessions": "42 sessions conducted in 2023 covering 310 suppliers",
+      "grievance_cases": "7 cases received in 2023, all under investigation or resolved"
+    }
   },
-  
-  "governance": {
-    "risk_level": "Low Risk",
-    "risk_score": 25,
-    "highlights": [
-      "State-owned enterprise with standardized governance structure",
-      "ESG Management Committee established",
-      "Regularly discloses sustainability information"
-    ]
-  },
-  
   "supply_chain": {
-    "position": "Midstream Processor",
     "upstream": {
       "suppliers": [
         {
           "name": "FGV Holdings Berhad",
-          "country": "Malaysia",
-          "product": "Palm Oil Raw Material",
-          "risk_status": "High Social Risk (75 points)",
-          "note": "Affected by U.S. CBP ban, currently under remediation"
+          "risk_status": "High Risk (75) - Social issues (CBP ban ongoing)",
+          "share": "18%",
+          "action": "Enhanced monitoring + volume reduction plan"
         },
         {
-          "name": "IOI Group",
-          "country": "Malaysia",
-          "product": "Palm Oil Raw Material",
-          "risk_status": "Low Risk (Alternative Supplier)"
+          "name": "IOI Corporation",
+          "risk_status": "Low Risk (22) - Strong ESG performance",
+          "share": "12%",
+          "action": "Preferred supplier - volume increase recommended"
         },
         {
-          "name": "Domestic Oil Crop Planting Bases",
-          "country": "China",
-          "product": "Soybean, Rapeseed",
-          "risk_status": "Low Risk"
+          "name": "Sime Darby Plantation",
+          "risk_status": "Medium-Low Risk (35)",
+          "share": "15%",
+          "action": "Standard monitoring"
+        },
+        {
+          "name": "Wilmar International",
+          "risk_status": "Medium Risk (42)",
+          "share": "22%",
+          "action": "Active engagement on traceability improvement"
         }
-      ],
-      "risk_transmission_path": [
-        "FGV labor issues → U.S. market ban → COFCO procurement compliance risk",
-        "FGV potential deforestation risk → EU EUDR requirements → COFCO export restrictions"
       ]
+    },
+    "midstream": {
+      "name": "COFCO Food Processing Division",
+      "role": "Major edible oil refiner and brand owner (Fortune / 福临门)",
+      "location": "China (multiple refineries)",
+      "products": [
+        "Fortune Edible Oil (福临门)",
+        "Golden Dragon Fish (金龙鱼) blended oils",
+        "Industrial frying oils",
+        "Specialty fats"
+      ],
+      "exposure": "Significant exposure to upstream palm oil ESG risks",
+      "annual_procurement": "~850,000 tons palm oil + other vegetable oils",
+      "dependency": "High dependency on imported palm oil from Southeast Asia"
     },
     "downstream": {
       "markets": [
-        {
-          "region": "European Union",
-          "products": ["Edible Oil", "Feed Raw Materials"],
-          "regulation": "EUDR (Deforestation Regulation)",
-          "compliance_deadline": "2024-12-30",
-          "risk": "If upstream FGV fails review, exports may be blocked"
-        },
-        {
-          "region": "United States",
-          "products": ["Food Raw Materials"],
-          "regulation": "CBP Forced Labor Ban",
-          "risk": "Must prove raw materials are not from FGV during the ban period"
-        },
-        {
-          "region": "China Domestic Market",
-          "products": ["Fortune Edible Oil", "Competitors of Arowana"],
-          "regulation": "Relatively lenient, but consumer ESG awareness is increasing",
-          "risk": "Brand reputation risk"
-        }
+        "China (domestic retail & foodservice)",
+        "Export to Southeast Asia and Middle East"
       ],
-      "impact_analysis": "If FGV issues persist, COFCO may face: 1) Export restrictions to Europe and US markets; 2) Increased cost of replacing suppliers; 3) Damage to brand image"
+      "regulations": {
+        "eu": "High compliance pressure as COFCO exports some products to EU and supplies EU brands indirectly",
+        "us": "Moderate risk - some volumes may enter US through third parties",
+        "china": "Growing consumer and regulatory focus on sustainable food supply chains"
+      },
+      "market_impact": {
+        "eu": "High Risk - Must achieve full EUDR compliance by Dec 2025 or face market access issues",
+        "us": "Medium Risk - Indirect exposure through supply chain partners",
+        "china": "Low-Medium Risk - Domestic focus but international reputation matters for premium segment"
+      }
     },
-    "mitigation_strategy": {
-      "short_term": [
-        "Increase procurement ratio from low-risk suppliers such as IOI",
-        "Establish supplier ESG scorecard system",
-        "Prepare EUDR compliance documents and traceability proof"
-      ],
-      "long_term": [
-        "Invest in domestic oil crop planting bases",
-        "Develop blockchain traceability system",
-        "Participate in industry sustainable standard setting (such as RSPO certification)"
-      ]
-    }
-  },
-  
-  "regulatory_compliance": {
-    "EUDR": {
-      "status": "In Progress",
-      "deadline": "2024-12-30",
-      "requirements": [
-        "Prove palm oil raw materials have no deforestation risk",
-        "Provide geographic location data and satellite imagery proof",
-        "Establish due diligence system"
-      ],
-      "progress": "Supplier audits initiated, collecting satellite data"
+    "impact_alert": {
+      "severity": "Medium-High",
+      "message": "⚠️ SUPPLY CHAIN RISK ALERT FOR COFCO\n\nYour upstream supplier FGV remains under active U.S. CBP import ban due to forced labor allegations. Although FGV submitted a remediation petition in June 2024, the ban is still in effect.\n\nCurrent situation:\n• 18% of your palm oil volume comes from FGV (High Social Risk)\n• This creates potential EUDR compliance risk for EU-bound products\n• Brand reputation risk for Fortune (福临门) in premium segment\n\nRecommended immediate actions:\n1. Accelerate volume reduction from FGV to below 8% by Q4 2025\n2. Increase sourcing from low-risk suppliers (IOI, verified Sime Darby)\n3. Require all Tier-1 suppliers to provide geolocation data for EUDR\n4. Use GreenLink platform for continuous monitoring of high-risk suppliers"
     },
-    "US_CBP": {
-      "status": "Under Monitoring",
-      "risk": "If procurement from FGV continues, may face U.S. market access issues",
-      "action": "Suspended direct procurement from FGV, awaiting remediation results"
-    }
-  },
-  
-  "greenlink_advantage": {
-    "vs_traditional_rating": [
-      "Traditional rating: MSCI gave BBB, cannot identify supply chain risks",
-      "GreenLink rating: Social risk 45 points, accurately identifies transmission risk from FGV"
-    ],
-    "real_time_monitoring": [
-      "July 2024 FGV submitted remediation petition → GreenLink system updated in real time",
-      "Traditional ratings updated annually with lagging response"
-    ],
-    "actionable_insights": [
-      "Clearly states: Need to diversify suppliers and reduce dependence on FGV",
-      "Provides compliance report templates to assist EUDR declaration"
+    "risk_scenarios": [
+      {
+        "scenario": "EUDR Non-Compliance (High Impact)",
+        "probability": "25%",
+        "impact": "Unable to export or supply EU brands after Dec 2025. Estimated revenue loss of 15-20% in affected categories. Major brand damage.",
+        "mitigation": "Immediately prioritize full traceability program and reduce high-risk supplier volumes aggressively."
+      },
+      {
+        "scenario": "Continued FGV Sourcing (Medium-High Impact)",
+        "probability": "40%",
+        "impact": "Ongoing reputational and compliance risk. Potential customer complaints or loss of international contracts.",
+        "mitigation": "Implement clear supplier exit strategy for FGV while maintaining supply security."
+      },
+      {
+        "scenario": "Successful Transition (Positive)",
+        "probability": "35%",
+        "impact": "Successfully reduce high-risk volumes and achieve 95%+ EUDR traceability by late 2025. Become preferred supplier for international brands.",
+        "mitigation": "Continue current trajectory and use GreenLink for real-time supplier risk monitoring."
+      }
     ]
-  },
-  
-  "recommendations": {
-    "immediate": [
-      "Complete on-site audit of FGV",
-      "Prepare EUDR compliance document package",
-      "Communicate supply chain remediation progress with European and American clients"
-    ],
-    "medium_term": [
-      "Reduce FGV procurement ratio from current 30% to below 10%",
-      "Increase procurement from RSPO certified suppliers such as IOI",
-      "Establish supply chain transparency platform"
-    ],
-    "long_term": [
-      "Invest in building domestic oil bases to achieve raw material self-control",
-      "Develop intelligent traceability system using blockchain + satellite remote sensing",
-      "Become an industry benchmark for sustainable supply chains"
-    ]
-  },
-  
-  "data_sources": [
-    "COFCO Group official sustainability reports",
-    "U.S. CBP import ban list",
-    "EU EUDR regulatory documents",
-    "Public news reports (Reuters, Bloomberg)",
-    "Public supply chain information"
-  ],
-  
-  "last_updated": "2024-11-09",
-  "greenlink_assessment_id": "COFCO-2024-11"
+  }
 }
